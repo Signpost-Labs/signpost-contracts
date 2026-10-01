@@ -28,6 +28,11 @@ pub struct ContractHealth {
     /// Always `false` for contracts that do not implement a `pay_to_contact`
     /// function (`registration`, `verification`, `progress`).
     pub pay_to_contact_paused: bool,
+    /// Whether the one-time migration window is currently open.
+    /// When `true`, admin can seed historical data via `admin_seed_*` functions.
+    /// Once closed via `close_migration_window`, this window can never be reopened
+    /// (the `MigrationWindowSealed` flag is set permanently).
+    pub migration_window_open: bool,
 }
 
 /// Progress of a bounded, resumable storage migration.
@@ -242,25 +247,27 @@ where
 #[contracttype]
 #[derive(Clone, Debug, PartialEq)]
 pub struct WiringLink {
-    pub address: Option<Address>,
+    /// The peer contract address. Empty if not yet configured.
+    pub address: Address,
+    /// Monotonic re-wiring epoch, incremented on every successful re-wiring.
+    /// Used to detect stale wiring references after upgrades or admin rotations.
     pub epoch: u32,
 }
 
 impl WiringLink {
-    /// The zero-value link: never configured.
-    pub const fn unconfigured() -> Self {
-        WiringLink {
-            address: None,
+    pub fn new(address: Address, epoch: u32) -> Self {
+        Self { address, epoch }
+    }
+
+    pub fn empty() -> Self {
+        Self {
+            address: Address::from_str(&Env::default(), ""),
             epoch: 0,
         }
     }
 
-    /// Whether this link currently has an address set. Equivalent to
-    /// `epoch > 0` — every successful [`write_wiring_link`] call sets both
-    /// the address and bumps the epoch together, so the two can never
-    /// disagree about "configured or not."
     pub fn is_configured(&self) -> bool {
-        self.address.is_some()
+        !self.address.to_string().is_empty()
     }
 }
 
@@ -775,9 +782,12 @@ fn is_base58btc_char(b: u8) -> bool {
     )
 }
 
-/// RFC4648 lowercase base32 alphabet: a–z and 2–7.
-fn is_base32_char(b: u8) -> bool {
-    matches!(b, b'a'..=b'z' | b'2'..=b'7')
+#[contracttype]
+#[derive(Clone, Debug, PartialEq)]
+pub enum AdminError {
+    NotInitialized,
+    AlreadyInitialized,
+    Unauthorized,
 }
 
 #[cfg(test)]

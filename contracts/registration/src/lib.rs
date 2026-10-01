@@ -1601,6 +1601,7 @@ impl RegistrationContract {
             initialized,
             paused,
             pay_to_contact_paused: false,
+            migration_window_open: false,
         }
     }
 

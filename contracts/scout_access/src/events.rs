@@ -23,6 +23,8 @@ pub const FEE_CONFIG_PROPOSAL_CANCELLED: &str = "fee_config_proposal_cancelled";
 pub const FEE_CONFIG_UPDATED: &str = "fee_config_updated";
 pub const FEE_CONFIG_DELAY_BYPASSED: &str = "fee_config_delay_bypassed";
 pub const WIRING_UPDATED: &str = "wiring_updated";
+pub const MIGRATION_WINDOW_OPENED: &str = "migration_window_opened";
+pub const MIGRATION_WINDOW_CLOSED: &str = "migration_window_closed";
 
 /// topics: (event_name, admin)  data: admin
 pub fn contract_initialized(env: &Env, admin: &Address) {
