@@ -432,6 +432,9 @@ impl ScoutAccessContract {
         if fees == 0 {
             return Err(ScoutAccessError::NoFeesToWithdraw);
         }
+        // Checks-effects-interactions: zero the balance before the external
+        // token transfer so that a reentrant call cannot double-withdraw.
+        env.storage().instance().set(&key, &0i128);
         let xlm = Self::get_token(&env)?;
         let contract_addr = env.current_contract_address();
         token::Client::new(&env, &xlm).transfer(&contract_addr, &to, &fees);
