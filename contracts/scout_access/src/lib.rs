@@ -661,13 +661,9 @@ impl ScoutAccessContract {
         // tier or an upgrade. Downgrades before expiry are rejected.
         // Also enforce a minimum interval between subscribe calls to prevent
         // race conditions / double-charging on rapid upgrades.
-        if let Some(existing) = env
-            .storage()
-            .persistent()
-            .get::<DataKey, Subscription>(&DataKey::Subscription(scout.clone()))
-        {
-            if now <= existing.expires_at {
-                if Self::tier_rank(&tier) < Self::tier_rank(&existing.tier) {
+        if let Some(ref current_sub) = existing {
+            if now <= current_sub.expires_at {
+                if Self::tier_rank(&tier) < Self::tier_rank(&current_sub.tier) {
                     return Err(ScoutAccessError::SubscriptionDowngradeNotAllowed);
                 }
                 if Self::tier_rank(&tier) > Self::tier_rank(&existing.tier) {
@@ -679,6 +675,8 @@ impl ScoutAccessContract {
                 }
             }
         }
+        // `is_renewal` is available here for future use (e.g. analytics events).
+        let _ = is_renewal;
 
         // Sybil resistance: gate Pro and Elite tier subscriptions to verified
         // scouts only. Basic tier remains open. Fails closed — if the
