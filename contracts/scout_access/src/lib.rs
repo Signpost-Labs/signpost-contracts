@@ -705,7 +705,7 @@ impl ScoutAccessContract {
             }
         }
 
-        let config = Self::fee_config(&env);
+        let config = Self::fee_config(&env)?;
         let fee = match &tier {
             SubscriptionTier::Basic => config.basic_sub_stroops,
             SubscriptionTier::Pro => config.pro_sub_stroops,
@@ -1243,7 +1243,7 @@ impl ScoutAccessContract {
             return Err(ScoutAccessError::TierNotPermitted);
         }
 
-        let config = Self::fee_config(&env);
+        let config = Self::fee_config(&env)?;
         let mut new_contacts: u32 = 0;
 
         // First pass: count new (uncharged) contacts to compute total fee.
