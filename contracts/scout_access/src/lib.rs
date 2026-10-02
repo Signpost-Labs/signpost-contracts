@@ -984,6 +984,7 @@ impl ScoutAccessContract {
     }
 
     /// Helper: increment contact count by N for Pro tier scouts (batch support).
+    /// The key is TTL-extended on every write so it outlives the subscription.
     fn increment_contact_count_by(env: &Env, scout: &Address, count: u32) {
         const SECONDS_PER_MONTH: u64 = 2_592_000;
         let now = env.ledger().timestamp();
@@ -994,6 +995,10 @@ impl ScoutAccessContract {
         env.storage()
             .persistent()
             .set(&quota_key, &(current.saturating_add(count)));
+        // Extend TTL so the key does not accumulate silently without a deadline.
+        env.storage()
+            .persistent()
+            .extend_ttl(&quota_key, PERSISTENT_TTL_MIN, PERSISTENT_TTL_MAX);
     }
 
     /// Write an `EvidenceAccessGrant(player_id, scout)` and append `scout` to
@@ -5478,6 +5483,34 @@ mod tests {
             progress_client.get_level(&player_id),
             ProgressLevel::EliteTier
         );
+    }
+
+    // -------------------------------------------------------------------------
+    // #1460: ContactCount key is TTL-managed and exposed via get_contact_count
+    // -------------------------------------------------------------------------
+
+    #[test]
+    fn test_get_contact_count_increments_on_pay_to_contact() {
+        let (env, admin, xlm, _contract_id, client) = setup();
+        let scout = Address::generate(&env);
+        mint_token(&env, &xlm, &admin, &scout, 100_000_000);
+
+        // Pro tier scouts have a monthly quota tracked via ContactCount.
+        client.subscribe(&scout, &SubscriptionTier::Pro);
+        assert_eq!(client.get_contact_count(&scout), 0);
+
+        client.pay_to_contact(&scout, &1u64);
+        assert_eq!(client.get_contact_count(&scout), 1);
+
+        client.pay_to_contact(&scout, &2u64);
+        assert_eq!(client.get_contact_count(&scout), 2);
+    }
+
+    #[test]
+    fn test_get_contact_count_zero_for_new_scout() {
+        let (env, _admin, _xlm, _contract_id, client) = setup();
+        let scout = Address::generate(&env);
+        assert_eq!(client.get_contact_count(&scout), 0);
     }
 
     #[test]
