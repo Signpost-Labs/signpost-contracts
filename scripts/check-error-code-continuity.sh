@@ -154,7 +154,7 @@ echo "=== Error-code append-only / no-renumbering policy check ==="
 echo "    Comparing working tree against: $BASE_REF"
 echo ""
 
-check_one "registration (ScoutChainError)" \
+check_one "registration (PromiscopeError)" \
   "contracts/registration/src/errors.rs"
 
 check_one "verification (VerificationError)" \

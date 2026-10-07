@@ -1,13 +1,13 @@
 # `subscribeScout()` and `payToContact()` reference implementation
 
 Not generated, not built, not published — these two files exist purely as a
-reference for the `scoutchain-backend` team and frontend integrators building
+reference for the `promiscope-backend` team and frontend integrators building
 the scout onboarding and player-discovery flow.
 
 ## Why this exists
 
 The scout_access contract is the entry point for every paid scout interaction
-on ScoutChain. Before a scout can contact players, log trial offers, or access
+on Promiscope. Before a scout can contact players, log trial offers, or access
 higher-level profiles, they must hold an active subscription. This directory
 documents the exact TypeScript call pattern for that two-step flow:
 
@@ -23,7 +23,7 @@ a scout-facing frontend or backend service.
 
 - `subscribe.ts` — exports `subscribeScout()` and `payToContact()`. Both
   functions build and submit real Soroban transactions via
-  `@scoutchain/bindings-scout-access`'s generated `Client` and return the
+  `@promiscope/bindings-scout-access`'s generated `Client` and return the
   Soroban transaction hash. Throws on RPC/simulation failure, on contract-level
   rejection (e.g. `SubscriptionDowngradeNotAllowed`, `ProContactLimitReached`),
   and on a non-`SUCCESS` confirmation status.
@@ -55,7 +55,7 @@ wallet needs enough XLM to cover the subscription fee (read from the contract's
 `Pro`, or `Elite`. The `pay_to_contact` step is automatically skipped when
 `INTEGRATION_TIER=Basic`.
 
-## Porting this into `scoutchain-backend`
+## Porting this into `promiscope-backend`
 
 1. Copy `subscribeScout()` into wherever the backend handles subscription
    purchases. Swap the `signTransaction` callback for whatever wallet/session

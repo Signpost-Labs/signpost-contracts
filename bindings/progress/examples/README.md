@@ -1,7 +1,7 @@
 # `getPlayerHistory()` reference implementation
 
 Not generated, not built, not published — these two files exist purely as a
-reference for teams integrating against the ScoutChain progress contract.
+reference for teams integrating against the Promiscope progress contract.
 
 ## Why this exists
 
@@ -17,7 +17,7 @@ exact call pattern for that read path.
 
 - `getPlayerHistory.ts` — queries `get_level`, `get_progress_history`,
   `get_history_since`, and `get_progress_history_page` against the progress
-  contract via the generated `@scoutchain/bindings-progress` client. Returns
+  contract via the generated `@promiscope/bindings-progress` client. Returns
   the player's current `ProgressLevel` string and a typed array of
   `ProgressEntry` records. No wallet or signer is required — all three calls
   are read-only simulations. Throws on RPC/simulation failure or on a

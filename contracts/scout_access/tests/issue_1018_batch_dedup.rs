@@ -8,7 +8,7 @@
 //! the Pro-tier contact-count increment all match the number of *distinct*
 //! player_ids in the batch, not the raw input length.
 
-use scoutchain_scout_access::{
+use promiscope_scout_access::{
     FeeConfig, ScoutAccessContract, ScoutAccessContractClient, SubscriptionTier,
 };
 use soroban_sdk::{testutils::Address as _, token::StellarAssetClient, Address, Env};
@@ -64,8 +64,8 @@ fn read_contact_count(env: &Env, scout: &Address, contract_id: &Address) -> u32 
     env.as_contract(contract_id, || {
         env.storage()
             .persistent()
-            .get::<scoutchain_scout_access::DataKey, u32>(
-                &scoutchain_scout_access::DataKey::ContactCount(scout.clone(), month_bucket),
+            .get::<promiscope_scout_access::DataKey, u32>(
+                &promiscope_scout_access::DataKey::ContactCount(scout.clone(), month_bucket),
             )
             .unwrap_or(0)
     })

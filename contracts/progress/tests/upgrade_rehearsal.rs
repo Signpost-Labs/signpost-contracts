@@ -7,7 +7,7 @@
 //! different v2 artifact cannot be built in this toolchain-less sandbox, so the
 //! real `upgrade()` code path is driven with an empty-bytes WASM blob).
 //!
-//! Run: `cargo test -p scoutchain-progress --test upgrade_rehearsal`.
+//! Run: `cargo test -p promiscope-progress --test upgrade_rehearsal`.
 //!
 //! `progress` stores each player's level in **persistent** storage (survives the
 //! swap) and holds three cross-contract links in **instance** storage
@@ -16,9 +16,9 @@
 //! re-wires all three; the deliberately-broken test proves the harness catches
 //! an operator who forgets to re-verify the instance `Paused` flag.
 
-use scoutchain_progress::{ProgressContract, ProgressContractClient};
-use scoutchain_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
-use scoutchain_shared_types::ProgressLevel;
+use promiscope_progress::{ProgressContract, ProgressContractClient};
+use promiscope_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
+use promiscope_shared_types::ProgressLevel;
 use soroban_sdk::{
     testutils::{Address as _, Ledger},
     Address, Bytes, Env, String, Vec,

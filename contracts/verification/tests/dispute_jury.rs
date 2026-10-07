@@ -20,8 +20,8 @@
 //! 11. Adversarial: tied exactly at quorum refuses early-close; deadline resolves false
 //! 12. Vote tallies tracked correctly across multiple voters
 
-use scoutchain_shared_types::ProgressLevel;
-use scoutchain_verification::{
+use promiscope_shared_types::ProgressLevel;
+use promiscope_verification::{
     RegPlayerProfile, RegPlayerVitals, RevocationSeverity, VerificationContract,
     VerificationContractClient, VerificationError,
 };

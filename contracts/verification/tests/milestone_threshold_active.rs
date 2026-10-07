@@ -1,6 +1,6 @@
 //! Milestone threshold vs active validator count (issue #1395).
 
-use scoutchain_verification::{
+use promiscope_verification::{
     RevocationSeverity, VerificationContract, VerificationContractClient, VerificationError,
 };
 use soroban_sdk::{testutils::Address as _, Address, Env, String, Vec};

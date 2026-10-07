@@ -1,8 +1,8 @@
 {
-  "name": "scoutchain-contracts-tooling",
+  "name": "promiscope-contracts-tooling",
   "private": true,
   "version": "1.0.0",
-  "description": "Node-based tooling for scout-off-contracts (currently just the on-chain/off-chain indexer reconciliation script). Does not affect the Rust contracts or bindings/ packages.",
+  "description": "Node-based tooling for promiscope-contracts (currently just the on-chain/off-chain indexer reconciliation script). Does not affect the Rust contracts or bindings/ packages.",
   "license": "MIT",
   "engines": {
     "node": ">=18"

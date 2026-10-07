@@ -124,7 +124,7 @@ aborting.
 
 Every contract now exposes `get_wiring_state()`, returning each peer
 pointer's address **and** a monotonically-incrementing `epoch` bumped on
-every re-wiring call (`scoutchain_shared_types::WiringLink`). Because Soroban
+every re-wiring call (`promiscope_shared_types::WiringLink`). Because Soroban
 has no atomic multi-contract transaction, a re-wiring operation touching
 several contracts (e.g. redeploying `progress` requires updating three
 separate `ProgressContract` pointers on `verification`, `registration`, and
@@ -372,7 +372,7 @@ cargo build --target wasm32v1-none --release
 
 # Then upgrade a single contract
 ./scripts/upgrade.sh testnet scout_access \
-  target/wasm32v1-none/release/scoutchain_scout_access.wasm
+  target/wasm32v1-none/release/promiscope_scout_access.wasm
 
 # Other contract names: registration | verification | progress
 ```

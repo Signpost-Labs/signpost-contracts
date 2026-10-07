@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — seed testnet with demo data.
+# Promiscope — seed testnet with demo data.
 # Run after initialize.sh to create test players, validators, and scouts.
 #
 # Minimum Funded Balance:

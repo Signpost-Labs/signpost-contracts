@@ -1346,64 +1346,64 @@ dependencies = [
 ]
 
 [[package]]
-name = "scoutchain-chaos-tests"
+name = "promiscope-chaos-tests"
 version = "2.0.0"
 dependencies = [
- "scoutchain-progress",
- "scoutchain-registration",
- "scoutchain-scout-access",
- "scoutchain-shared-types",
- "scoutchain-verification",
+ "promiscope-progress",
+ "promiscope-registration",
+ "promiscope-scout-access",
+ "promiscope-shared-types",
+ "promiscope-verification",
  "soroban-sdk",
 ]
 
 [[package]]
-name = "scoutchain-progress"
+name = "promiscope-progress"
 version = "2.0.0"
 dependencies = [
- "scoutchain-registration",
- "scoutchain-shared-types",
- "scoutchain-verification",
+ "promiscope-registration",
+ "promiscope-shared-types",
+ "promiscope-verification",
  "soroban-sdk",
 ]
 
 [[package]]
-name = "scoutchain-registration"
+name = "promiscope-registration"
 version = "2.0.0"
 dependencies = [
  "ed25519-dalek 3.0.0-rc.0",
- "scoutchain-progress",
- "scoutchain-shared-types",
- "scoutchain-verification",
+ "promiscope-progress",
+ "promiscope-shared-types",
+ "promiscope-verification",
  "soroban-sdk",
 ]
 
 [[package]]
-name = "scoutchain-scout-access"
+name = "promiscope-scout-access"
 version = "2.0.0"
 dependencies = [
- "scoutchain-progress",
- "scoutchain-registration",
- "scoutchain-shared-types",
- "scoutchain-verification",
+ "promiscope-progress",
+ "promiscope-registration",
+ "promiscope-shared-types",
+ "promiscope-verification",
  "soroban-sdk",
 ]
 
 [[package]]
-name = "scoutchain-shared-types"
-version = "2.0.0"
-dependencies = [
- "ed25519-dalek 3.0.0-rc.0",
- "soroban-sdk",
-]
-
-[[package]]
-name = "scoutchain-verification"
+name = "promiscope-shared-types"
 version = "2.0.0"
 dependencies = [
  "ed25519-dalek 3.0.0-rc.0",
- "scoutchain-progress",
- "scoutchain-shared-types",
+ "soroban-sdk",
+]
+
+[[package]]
+name = "promiscope-verification"
+version = "2.0.0"
+dependencies = [
+ "ed25519-dalek 3.0.0-rc.0",
+ "promiscope-progress",
+ "promiscope-shared-types",
  "soroban-sdk",
 ]
 

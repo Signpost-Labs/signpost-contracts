@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # rehearse-admin-rotation.sh — rehearse the routine two-step admin-rotation
-# (propose_admin → accept_admin) across all four ScoutChain contracts on a
+# (propose_admin → accept_admin) across all four Promiscope contracts on a
 # disposable local or testnet deployment.
 #
 # PURPOSE
@@ -141,8 +141,8 @@ log "Step 4: Deploying contracts to '$NETWORK' with OLD_ADMIN as deployer..."
 
 deploy_contract() {
   local name="$1"
-  local wasm_src="$WASM_DIR/scoutchain_${name}.wasm"
-  local wasm_opt="$WASM_DIR/scoutchain_${name}.optimized.wasm"
+  local wasm_src="$WASM_DIR/promiscope_${name}.wasm"
+  local wasm_opt="$WASM_DIR/promiscope_${name}.optimized.wasm"
 
   # Optimize if the optimized WASM is stale or missing.
   if [[ ! -f "$wasm_opt" ]] || [[ "$wasm_src" -nt "$wasm_opt" ]]; then

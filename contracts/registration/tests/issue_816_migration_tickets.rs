@@ -5,11 +5,11 @@
 //! 2. A replay/reuse of the same authorization against a second new contract is rejected
 
 use ed25519_dalek::{Signer, SigningKey};
-use scoutchain_registration::{
+use promiscope_registration::{
     MigrationAuthorization, MigrationRole, PlayerVitals, RegistrationContract,
-    RegistrationContractClient, ScoutChainError,
+    RegistrationContractClient, PromiscopeError,
 };
-use scoutchain_shared_types::ProgressLevel;
+use promiscope_shared_types::ProgressLevel;
 use soroban_sdk::{
     address_payload::AddressPayload, testutils::Address as _, Address, Bytes, BytesN, Env, String,
     Vec,
@@ -228,7 +228,7 @@ fn test_replay_same_nonce_rejected() {
 
     assert_eq!(
         result2,
-        Err(Ok(ScoutChainError::InvalidInput)),
+        Err(Ok(PromiscopeError::InvalidInput)),
         "Replay with same nonce should be rejected"
     );
 }

@@ -40,7 +40,7 @@ jobs:
         run: cargo test --workspace --locked
 
       - name: Test progress contract
-        run: cargo test -p scoutchain-progress --locked -- --nocapture
+        run: cargo test -p promiscope-progress --locked -- --nocapture
 
       - name: CPU-instruction cost budget report
         # cost_budget.rs asserted its own pass/fail already as part of the
@@ -234,11 +234,11 @@ jobs:
 
           deploy_one() {
             local name="$1"
-            local wasm_src="$WASM/scoutchain_${name}.wasm"
-            local wasm_opt="$WASM/scoutchain_${name}.optimized.wasm"
+            local wasm_src="$WASM/promiscope_${name}.wasm"
+            local wasm_opt="$WASM/promiscope_${name}.optimized.wasm"
             # Use the current non-deprecated build+optimize path
             stellar contract build \
-              --package "scoutchain-${name//_/-}" \
+              --package "promiscope-${name//_/-}" \
               --optimize \
               --target-dir target \
               > /dev/null 2>&1 \
@@ -366,7 +366,7 @@ jobs:
           failed=0
 
           for contract in registration verification progress scout_access; do
-            wasm="${WASM}/scoutchain_${contract}.wasm"
+            wasm="${WASM}/promiscope_${contract}.wasm"
             abi_file="abi-smoke/${contract}-abi.json"
             index_ts="bindings/${contract}/src/index.ts"
 
@@ -507,7 +507,7 @@ jobs:
           mkdir -p abi
           WASM=target/wasm32v1-none/release
           for contract in registration verification progress scout_access; do
-            wasm="${WASM}/scoutchain_${contract}.wasm"
+            wasm="${WASM}/promiscope_${contract}.wasm"
             out="abi/${contract}-abi.json"
             echo "==> Inspecting ${contract}..."
             stellar contract info interface --wasm "$wasm" --output json-formatted > "$out"
@@ -530,8 +530,8 @@ jobs:
           WASM=target/wasm32v1-none/release
           echo '{}' > abi/wasm-sizes.json
           for contract in registration verification progress scout_access; do
-            wasm_src="${WASM}/scoutchain_${contract}.wasm"
-            wasm_opt="${WASM}/scoutchain_${contract}.optimized.wasm"
+            wasm_src="${WASM}/promiscope_${contract}.wasm"
+            wasm_opt="${WASM}/promiscope_${contract}.optimized.wasm"
             echo "==> Optimizing ${contract}..."
             stellar contract optimize --wasm "$wasm_src" --wasm-out "$wasm_opt"
             size=$(wc -c < "$wasm_opt" | tr -d ' ')

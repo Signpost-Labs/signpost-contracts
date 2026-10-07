@@ -100,7 +100,7 @@ This design proposes a **verified-tier gating mechanism** combined with **off-ch
 
 ### New Functions
 
-#### `verify_scout(wallet: Address) -> Result<(), ScoutChainError>` (registration contract)
+#### `verify_scout(wallet: Address) -> Result<(), PromiscopeError>` (registration contract)
 
 Admin-only function to mark a scout as verified.
 
@@ -163,7 +163,7 @@ ScoutNotFound = 12,
 
 The scout_access contract calls the registration contract to fetch and validate scout verification status. As implemented, this uses the registration contract's existing wallet-lookup function rather than a new, verification-specific one:
 
-1. `get_scout_by_wallet(env: Env, wallet: Address) -> Result<ScoutProfile, ScoutChainError>` (`contracts/registration/src/lib.rs`) — a general-purpose, pre-existing wallet-lookup function (its doc comment reads "Get a scout profile by wallet address. Used by scout_access contract for Pro-tier verification gating."), reused here rather than adding a verification-specific `get_scout_profile` function. It resolves the wallet to a `scout_id` via the `DataKey::ScoutByWallet` index and returns the full `ScoutProfile`, which includes the `verification: ScoutVerificationRecord` the gate inspects.
+1. `get_scout_by_wallet(env: Env, wallet: Address) -> Result<ScoutProfile, PromiscopeError>` (`contracts/registration/src/lib.rs`) — a general-purpose, pre-existing wallet-lookup function (its doc comment reads "Get a scout profile by wallet address. Used by scout_access contract for Pro-tier verification gating."), reused here rather than adding a verification-specific `get_scout_profile` function. It resolves the wallet to a `scout_id` via the `DataKey::ScoutByWallet` index and returns the full `ScoutProfile`, which includes the `verification: ScoutVerificationRecord` the gate inspects.
 
 2. `scout_access`'s `subscribe()` (`contracts/scout_access/src/lib.rs`) declares a local `registration_contract` module with its own `#[contractclient]`-derived `Client` and a minimal `RegistrationContractClient` trait exposing only `get_scout_by_wallet`, plus a local copy of the `ScoutProfile`/`ScoutVerificationRecord` shapes it needs (contracts can't share Rust types directly across the WASM boundary — each side keeps a client-side mirror of the other's public interface, the same pattern `progress_contract`'s client module uses). Before charging the Pro-tier fee, `subscribe()` calls `try_get_scout_by_wallet` and checks `scout_profile.verification.verified`, returning `ScoutAccessError::ScoutNotVerified` if the scout isn't found or isn't verified. If no registration contract is wired (`DataKey::RegistrationContract` unset), the gate is skipped (graceful degradation) rather than blocking Pro-tier subscriptions outright.
 
@@ -211,9 +211,9 @@ Per ai.md and standard microservice patterns:
 
 | Component | Repo | Owner | Responsibility |
 |-----------|------|-------|-----------------|
-| On-chain verified-tier gating | this repo | @scout-off | Reject Pro subscriptions for unverified scouts via contract enforcement |
+| On-chain verified-tier gating | this repo | @promiscope | Reject Pro subscriptions for unverified scouts via contract enforcement |
 | Off-chain KYC gate | frontend/backend | @frontend-team | Prevent UI submission of `register_scout` calls from unverified identities |
-| Scout identity verification (admin) | this repo | @scout-off | Admin `verify_scout` function to mark scouts as verified |
+| Scout identity verification (admin) | this repo | @promiscope | Admin `verify_scout` function to mark scouts as verified |
 | KYC service (identity provider) | external | e.g., Stripe, Onfido | Provide proof-of-personhood, document verification, etc. |
 | Wallet tracking (if any) | frontend/backend | @frontend-team | Optional: maintain off-chain ledger of identity → wallet mappings for audit trails |
 

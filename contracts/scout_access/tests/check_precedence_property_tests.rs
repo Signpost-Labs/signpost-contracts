@@ -10,7 +10,7 @@
 //! generate the full combinatorial space, which is equivalent for finite
 //! boolean/enum domains.
 
-use scoutchain_scout_access::{
+use promiscope_scout_access::{
     FeeConfig, ScoutAccessContract, ScoutAccessContractClient, SubscriptionTier,
 };
 use soroban_sdk::{
@@ -131,7 +131,7 @@ fn valid_cid(env: &Env) -> String {
 /// triples and assert the first failing guard wins.
 #[test]
 fn test_subscribe_check_precedence_exhaustive() {
-    use scoutchain_scout_access::ScoutAccessError;
+    use promiscope_scout_access::ScoutAccessError;
 
     // We test the 3 meaningful downgrade/upgrade scenarios when a sub exists:
     //   downgrade=true  → SubscriptionDowngradeNotAllowed (before UpgradeTooSoon check)
@@ -244,7 +244,7 @@ fn test_subscribe_check_precedence_exhaustive() {
 
 #[test]
 fn test_pay_to_contact_check_precedence_exhaustive() {
-    use scoutchain_scout_access::ScoutAccessError;
+    use promiscope_scout_access::ScoutAccessError;
 
     // Tier options: None (no sub), Basic, Pro, Elite
     #[derive(Clone, Copy, Debug)]
@@ -393,7 +393,7 @@ fn test_pay_to_contact_check_precedence_exhaustive() {
 
 #[test]
 fn test_batch_contact_players_check_precedence_exhaustive() {
-    use scoutchain_scout_access::ScoutAccessError;
+    use promiscope_scout_access::ScoutAccessError;
 
     #[derive(Clone, Copy, Debug)]
     enum TierOpt {
@@ -490,7 +490,7 @@ fn test_batch_contact_players_check_precedence_exhaustive() {
 
 #[test]
 fn test_log_trial_offer_check_precedence_exhaustive() {
-    use scoutchain_scout_access::ScoutAccessError;
+    use promiscope_scout_access::ScoutAccessError;
 
     #[derive(Clone, Copy, Debug)]
     enum TierOpt {
@@ -611,7 +611,7 @@ fn test_log_trial_offer_check_precedence_exhaustive() {
 /// Verify that a freshly initialized+paused contract returns ContractPaused.
 #[test]
 fn test_paused_beats_subscription_checks() {
-    use scoutchain_scout_access::ScoutAccessError;
+    use promiscope_scout_access::ScoutAccessError;
 
     let h = setup_initialized();
     let scout = Address::generate(&h.env);
@@ -654,7 +654,7 @@ fn test_paused_beats_subscription_checks() {
 /// previously contacted a player gets SubscriptionExpired, not AlreadyContacted.
 #[test]
 fn test_expired_beats_already_contacted() {
-    use scoutchain_scout_access::ScoutAccessError;
+    use promiscope_scout_access::ScoutAccessError;
 
     let h = setup_initialized();
     let scout = Address::generate(&h.env);
@@ -678,7 +678,7 @@ fn test_expired_beats_already_contacted() {
 /// Non-Elite tier beats TrialOfferRateLimited for log_trial_offer.
 #[test]
 fn test_non_elite_beats_rate_limit() {
-    use scoutchain_scout_access::ScoutAccessError;
+    use promiscope_scout_access::ScoutAccessError;
 
     // Pro scout, never sent an offer — should fail with Unauthorized (non-Elite),
     // not TrialOfferRateLimited.
@@ -713,7 +713,7 @@ fn test_non_elite_beats_rate_limit() {
 /// not the misleading ScoutNotSubscribed it returned before issue #840 was fixed.
 #[test]
 fn test_log_trial_offer_returns_not_initialized_before_initialize() {
-    use scoutchain_scout_access::ScoutAccessError;
+    use promiscope_scout_access::ScoutAccessError;
 
     let h = setup_uninitialized();
     let scout = Address::generate(&h.env);
@@ -735,7 +735,7 @@ fn test_log_trial_offer_returns_not_initialized_before_initialize() {
 /// scout has no subscription (the pre-existing, expected behavior).
 #[test]
 fn test_log_trial_offer_returns_scout_not_subscribed_when_initialized_no_sub() {
-    use scoutchain_scout_access::ScoutAccessError;
+    use promiscope_scout_access::ScoutAccessError;
 
     let h = setup_initialized();
     let scout = Address::generate(&h.env);

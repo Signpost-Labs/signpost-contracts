@@ -4,7 +4,7 @@
 //! `admin_seed_trial_offer`, and `admin_seed_auto_renew` in the scout_access
 //! contract, plus migration-window management.
 
-use scoutchain_scout_access::{
+use promiscope_scout_access::{
     ContactRecord, FeeConfig, FeeConfigHistoryEntry, ScoutAccessContract,
     ScoutAccessContractClient, ScoutAccessError, Subscription, SubscriptionTier, TrialEscrow,
     TrialOffer,

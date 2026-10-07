@@ -1,15 +1,17 @@
-# ScoutChain — AI Integration Guide
+# Promiscope Contracts — AI Integration Guide
+
+> **Migration status:** These contracts implement the former football scouting product. Their player, scout, validator, and sponsorship interfaces are legacy references; Promiscope's community project accountability model is not implemented on-chain yet.
 
 > **Last reviewed:** 2026-08-30
 > **Contract version:** see `version()` on each deployed contract
-> **Repo root:** `scout-off-contracts/`
+> **Repo root:** `promiscope-contracts/`
 >
 > This document is kept in sync with the live `#[contractimpl]` signatures. If
 > you spot a discrepancy, open an issue referencing this file and the affected
 > function.
 
 This document is the authoritative reference for AI assistants, SDK consumers,
-and new team members integrating with ScoutChain's Soroban smart contracts.
+and new team members integrating with Promiscope's Soroban smart contracts.
 
 ---
 
@@ -17,16 +19,16 @@ and new team members integrating with ScoutChain's Soroban smart contracts.
 
 | Contract | Package | Purpose |
 |----------|---------|---------|
-| `registration` | `scoutchain-registration` | Player & scout on-chain identity |
-| `verification` | `scoutchain-verification` | Validator registry & milestone approvals |
-| `progress` | `scoutchain-progress` | Four-tier level state machine |
-| `scout_access` | `scoutchain-scout-access` | Subscriptions, pay-to-contact, trial offers |
+| `registration` | `promiscope-registration` | Player & scout on-chain identity |
+| `verification` | `promiscope-verification` | Validator registry & milestone approvals |
+| `progress` | `promiscope-progress` | Four-tier level state machine |
+| `scout_access` | `promiscope-scout-access` | Subscriptions, pay-to-contact, trial offers |
 
 ---
 
 ## Shared Types
 
-All four contracts import from `scoutchain-shared-types`:
+All four contracts import from `promiscope-shared-types`:
 
 ```rust
 pub enum ProgressLevel {
@@ -56,7 +58,7 @@ Each contract has a **one-time** `initialize` call. Calling it twice returns `Al
 
 ```rust
 // registration
-pub fn initialize(env: Env, admin: Address) -> Result<(), ScoutChainError>
+pub fn initialize(env: Env, admin: Address) -> Result<(), PromiscopeError>
 
 // verification
 pub fn initialize(env: Env, admin: Address) -> Result<(), VerificationError>
@@ -85,15 +87,15 @@ pub fn register_player(
     wallet: Address,
     vitals: PlayerVitals,
     ipfs_hashes: Vec<String>,
-) -> Result<u64, ScoutChainError>
+) -> Result<u64, PromiscopeError>
 
 pub fn update_profile(
     env: Env,
     player_id: u64,
     ipfs_hashes: Vec<String>,
-) -> Result<(), ScoutChainError>
+) -> Result<(), PromiscopeError>
 
-pub fn register_scout(env: Env, wallet: Address, region: String) -> Result<u64, ScoutChainError>
+pub fn register_scout(env: Env, wallet: Address, region: String) -> Result<u64, PromiscopeError>
 
 pub fn filter_players(
     env: Env,
@@ -102,30 +104,30 @@ pub fn filter_players(
     min_level: ProgressLevel,
     offset: u32,
     limit: u32,
-) -> Result<FilterResult, ScoutChainError>
+) -> Result<FilterResult, PromiscopeError>
 
 // Queries
-pub fn get_player(env: Env, player_id: u64) -> Result<PlayerProfile, ScoutChainError>
-pub fn get_player_by_wallet(env: Env, wallet: Address) -> Result<PlayerProfile, ScoutChainError>
-pub fn get_player_id_by_wallet(env: Env, wallet: Address) -> Result<u64, ScoutChainError>
-pub fn get_scout(env: Env, scout_id: u64) -> Result<ScoutProfile, ScoutChainError>
+pub fn get_player(env: Env, player_id: u64) -> Result<PlayerProfile, PromiscopeError>
+pub fn get_player_by_wallet(env: Env, wallet: Address) -> Result<PlayerProfile, PromiscopeError>
+pub fn get_player_id_by_wallet(env: Env, wallet: Address) -> Result<u64, PromiscopeError>
+pub fn get_scout(env: Env, scout_id: u64) -> Result<ScoutProfile, PromiscopeError>
 pub fn get_player_count(env: Env) -> u64
 pub fn get_scout_count(env: Env) -> u64
 pub fn health(env: Env) -> ContractHealth
 pub fn version(env: Env) -> String
 
 // Admin only
-pub fn set_progress_contract(env: Env, addr: Address) -> Result<(), ScoutChainError>
-pub fn set_player_level(env: Env, player_id: u64, level: ProgressLevel) -> Result<(), ScoutChainError>
-pub fn deregister_player(env: Env, player_id: u64) -> Result<(), ScoutChainError>
-pub fn deactivate_player(env: Env, player_id: u64) -> Result<(), ScoutChainError>
-pub fn reactivate_player(env: Env, player_id: u64) -> Result<(), ScoutChainError>
-pub fn verify_scout(env: Env, scout_id: u64) -> Result<(), ScoutChainError>
-pub fn propose_admin(env: Env, new_admin: Address) -> Result<(), ScoutChainError>
-pub fn accept_admin(env: Env) -> Result<(), ScoutChainError>
-pub fn pause_contract(env: Env) -> Result<(), ScoutChainError>
-pub fn unpause_contract(env: Env) -> Result<(), ScoutChainError>
-pub fn upgrade(env: Env, new_wasm_hash: BytesN<32>) -> Result<(), ScoutChainError>
+pub fn set_progress_contract(env: Env, addr: Address) -> Result<(), PromiscopeError>
+pub fn set_player_level(env: Env, player_id: u64, level: ProgressLevel) -> Result<(), PromiscopeError>
+pub fn deregister_player(env: Env, player_id: u64) -> Result<(), PromiscopeError>
+pub fn deactivate_player(env: Env, player_id: u64) -> Result<(), PromiscopeError>
+pub fn reactivate_player(env: Env, player_id: u64) -> Result<(), PromiscopeError>
+pub fn verify_scout(env: Env, scout_id: u64) -> Result<(), PromiscopeError>
+pub fn propose_admin(env: Env, new_admin: Address) -> Result<(), PromiscopeError>
+pub fn accept_admin(env: Env) -> Result<(), PromiscopeError>
+pub fn pause_contract(env: Env) -> Result<(), PromiscopeError>
+pub fn unpause_contract(env: Env) -> Result<(), PromiscopeError>
+pub fn upgrade(env: Env, new_wasm_hash: BytesN<32>) -> Result<(), PromiscopeError>
 ```
 
 ---
@@ -429,10 +431,10 @@ stellar contract invoke --id $SCOUT_ACCESS_CONTRACT_ID \
 After deployment run `./scripts/generate-bindings.sh <network>`. Import the generated clients:
 
 ```typescript
-import { Client as RegistrationClient } from "@scoutchain/bindings-registration";
-import { Client as VerificationClient }  from "@scoutchain/bindings-verification";
-import { Client as ProgressClient }      from "@scoutchain/bindings-progress";
-import { Client as ScoutAccessClient }   from "@scoutchain/bindings-scout-access";
+import { Client as RegistrationClient } from "@promiscope/bindings-registration";
+import { Client as VerificationClient }  from "@promiscope/bindings-verification";
+import { Client as ProgressClient }      from "@promiscope/bindings-progress";
+import { Client as ScoutAccessClient }   from "@promiscope/bindings-scout-access";
 ```
 
 See `bindings/README.md` for full usage details.
@@ -443,7 +445,7 @@ See `bindings/README.md` for full usage details.
 
 Error codes are **per-contract**. The same numeric code can mean different things in different contracts. Always check which contract returned the error.
 
-### `ScoutChainError` (registration)
+### `PromiscopeError` (registration)
 
 | Code | Variant | Cause |
 |------|---------|-------|

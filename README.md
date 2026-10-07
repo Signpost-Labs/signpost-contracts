@@ -1,13 +1,13 @@
-# ScoutChain
+# Promiscope
 
-[![Soroban Contract CI](https://github.com/scout-off/scout-off-contracts/actions/workflows/contract-ci.yml/badge.svg)](https://github.com/scout-off/scout-off-contracts/actions/workflows/contract-ci.yml)
-[![CI](https://github.com/scout-off/scout-off-contracts/actions/workflows/ci.yml/badge.svg)](https://github.com/scout-off/scout-off-contracts/actions/workflows/ci.yml)
+[![Soroban Contract CI](https://github.com/promiscope/promiscope-contracts/actions/workflows/contract-ci.yml/badge.svg)](https://github.com/promiscope/promiscope-contracts/actions/workflows/contract-ci.yml)
+[![CI](https://github.com/promiscope/promiscope-contracts/actions/workflows/ci.yml/badge.svg)](https://github.com/promiscope/promiscope-contracts/actions/workflows/ci.yml)
 
-Core Soroban (Rust) smart contracts powering the Scouting Platform on the Stellar network. Manages decentralized talent identities, maps tamper-proof progress metrics, handles validator verification signatures, and governs scout platform access.
+This repository contains the legacy Soroban contracts from the former football scouting product. They do not yet model community projects, evidence submissions, or community review. Do not describe or deploy these contracts as Promiscope accountability features until their data model and workflows are redesigned.
 
-## Overview
+## Legacy contract reference
 
-ScoutChain solves the visibility problem for undiscovered football talent worldwide. Players from underserved regions create dynamic on-chain profiles backed by verifiable milestones — approved by local coaches, academy directors, and certified trainers. Scouts browse a trusted, filterable talent pool and connect directly with players, with every interaction settled via Stellar's near-zero-cost payment layer.
+Promiscope solves the visibility problem for undiscovered football talent worldwide. Players from underserved regions create dynamic on-chain profiles backed by verifiable milestones — approved by local coaches, academy directors, and certified trainers. Scouts browse a trusted, filterable talent pool and connect directly with players, with every interaction settled via Stellar's near-zero-cost payment layer.
 
 Stellar is the backbone: transactions cost fractions of a cent and settle in 3–5 seconds, making microtransactions viable for scouts paying to unlock premium data or contact players across borders. Soroban smart contracts handle player registration, milestone verification, scout subscriptions, and secure connection agreements with auditable, tamper-proof logic.
 
@@ -220,7 +220,7 @@ sequenceDiagram
     actor Player
     actor Validator
     actor Scout
-    participant Contract as ScoutChain Contract
+    participant Contract as Promiscope Contract
     participant Storage as IPFS / Arweave
 
     rect rgb(235, 245, 255)
@@ -310,7 +310,7 @@ sequenceDiagram
 ## Repository Structure
 
 ```
-scout-off-contracts/
+promiscope-contracts/
 ├── contracts/
 │   ├── registration/       # Player & scout on-chain identity
 │   ├── verification/       # Validator registry & milestone approvals
@@ -439,8 +439,8 @@ Without the full wiring, milestones and trial offers are recorded but player lev
 After deployment, run `./scripts/generate-bindings.sh testnet` to produce auto-generated TypeScript clients in `bindings/`. The backend and frontend import these directly:
 
 ```typescript
-import { Client as RegistrationClient } from "@scoutchain/bindings-registration";
-import { Client as ProgressClient }     from "@scoutchain/bindings-progress";
+import { Client as RegistrationClient } from "@promiscope/bindings-registration";
+import { Client as ProgressClient }     from "@promiscope/bindings-progress";
 ```
 
 See `bindings/README.md` for usage details.
@@ -645,13 +645,13 @@ The following are tracked in the Roadmap but have **no contract code today**:
 - `stellar-cli` — Stellar CLI for deployment and contract invocation
 - `wasm32v1-none` — Rust compilation target for Soroban WASM output
 
-Frontend and backend dependencies live in their respective repos (`scoutchain-frontend`, `scoutchain-backend`).
+Frontend and backend dependencies live in their respective repos (`promiscope-frontend`, `promiscope-backend`).
 
 ## Error Codes
 
 Each contract defines its own error enum. The same numeric code can mean different things in different contracts — always check which contract you are calling. See [`docs/CONTRACT_REFERENCE.md`](docs/CONTRACT_REFERENCE.md) for the full per-contract reference.
 
-### `ScoutChainError` (registration contract)
+### `PromiscopeError` (registration contract)
 
 | Code | Variant | Common Cause | Resolution |
 |------|---------|--------------|------------|
@@ -820,7 +820,7 @@ MIT
 
 ## Support
 
-- GitHub Issues: [Create an issue](https://github.com/scout-off/scout-off-contracts/issues)
+- GitHub Issues: [Create an issue](https://github.com/promiscope/promiscope-contracts/issues)
 - **Security Reports**: See [SECURITY.md](SECURITY.md) for our security policy and private vulnerability reporting process
 - Stellar Discord: https://discord.gg/stellar
 - Stellar Developers: https://developers.stellar.org

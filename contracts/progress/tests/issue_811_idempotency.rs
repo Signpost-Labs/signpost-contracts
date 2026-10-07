@@ -62,14 +62,14 @@
 //! Companion determination for `registration.set_player_level` lives in
 //! `contracts/registration/tests/issue_811_idempotency.rs`.
 //!
-//! Run: `cargo test -p scoutchain-progress --test issue_811_idempotency`
+//! Run: `cargo test -p promiscope-progress --test issue_811_idempotency`
 
-use scoutchain_progress::{
+use promiscope_progress::{
     DataKey, ProgressContract, ProgressContractClient, ProgressEntry, ProgressError,
 };
-use scoutchain_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
-use scoutchain_shared_types::ProgressLevel;
-use scoutchain_verification::{VerificationContract, VerificationContractClient};
+use promiscope_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
+use promiscope_shared_types::ProgressLevel;
+use promiscope_verification::{VerificationContract, VerificationContractClient};
 use soroban_sdk::{testutils::Address as _, Address, Bytes, Env, String, Vec};
 
 fn valid_vitals(env: &Env) -> PlayerVitals {

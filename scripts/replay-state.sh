@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — replay persistent state from an OLD contract set onto a NEW one.
+# Promiscope — replay persistent state from an OLD contract set onto a NEW one.
 #
 # This is step 4 ("replay events to seed initial state") of the "Address
 # migration (new contract ID)" procedure in docs/DEPLOYMENT.md. It is normally
@@ -126,7 +126,7 @@ NEW_SCOUT_ACCESS_CONTRACT_ID="${NEW_SCOUT_ACCESS_CONTRACT_ID:-$(read_id .env.con
 DEPLOYER="${DEPLOYER_SECRET:-}"
 
 echo "=========================================================================="
-echo "  ScoutChain state replay — network: $NETWORK"
+echo "  Promiscope state replay — network: $NETWORK"
 echo "=========================================================================="
 echo "  OLD registration : ${OLD_REGISTRATION_CONTRACT_ID:-<unset>}"
 echo "  OLD verification : ${OLD_VERIFICATION_CONTRACT_ID:-<unset>}"

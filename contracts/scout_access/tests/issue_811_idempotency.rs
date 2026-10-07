@@ -5,8 +5,8 @@
 //! transaction (no partial state committed) and that the new idempotency
 //! nonce mechanism makes retries safe.
 
-use scoutchain_progress::{ProgressContract, ProgressContractClient};
-use scoutchain_scout_access::{
+use promiscope_progress::{ProgressContract, ProgressContractClient};
+use promiscope_scout_access::{
     FeeConfig, ScoutAccessContract, ScoutAccessContractClient, SubscriptionTier,
 };
 use soroban_sdk::{
@@ -104,8 +104,8 @@ fn test_confirm_trial_offer_progress_call_failed_reverts_all_state() {
     let escrow = env.as_contract(&scout_access.address, || {
         env.storage()
             .persistent()
-            .get::<scoutchain_scout_access::DataKey, scoutchain_scout_access::TrialEscrow>(
-                &scoutchain_scout_access::DataKey::TrialEscrow(player_id, index),
+            .get::<promiscope_scout_access::DataKey, promiscope_scout_access::TrialEscrow>(
+                &promiscope_scout_access::DataKey::TrialEscrow(player_id, index),
             )
     });
     assert!(
@@ -122,8 +122,8 @@ fn test_confirm_trial_offer_idempotency_nonce_prevents_replay() {
     // and whitelist scout_access as the secondary advance_level caller. The
     // milestone_ref (trial index 1) must validate, so also wire a
     // verification contract with one approved milestone.
-    let ver_id = env.register(scoutchain_verification::VerificationContract, ());
-    let verification = scoutchain_verification::VerificationContractClient::new(&env, &ver_id);
+    let ver_id = env.register(promiscope_verification::VerificationContract, ());
+    let verification = promiscope_verification::VerificationContractClient::new(&env, &ver_id);
     verification.initialize(&admin);
 
     progress.initialize(&admin);

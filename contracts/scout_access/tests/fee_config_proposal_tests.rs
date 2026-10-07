@@ -8,7 +8,7 @@
 //! - Verifying that business logic uses the active config, never the pending one
 //! - Handling overlapping proposals
 
-use scoutchain_scout_access::{
+use promiscope_scout_access::{
     FeeConfig, ScoutAccessContract, ScoutAccessContractClient, SubscriptionTier,
 };
 use soroban_sdk::{

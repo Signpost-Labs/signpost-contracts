@@ -1,6 +1,6 @@
 use soroban_sdk::{contracttype, Address, String};
 
-pub use scoutchain_shared_types::WiringLink;
+pub use promiscope_shared_types::WiringLink;
 
 /// Paginated response for `get_scout_contacts_page`.
 ///
@@ -330,7 +330,7 @@ pub enum DataKey {
     MigrationWindowSealed,
     /// Re-wiring epoch for `DataKey::ProgressContract`, bumped by every
     /// `set_progress_contract` / `update_progress_contract` call. See
-    /// `scoutchain_shared_types::WiringLink` and
+    /// `promiscope_shared_types::WiringLink` and
     /// `docs/WIRING_REGISTRY_DESIGN.md` (issue #1041).
     ProgressContractEpoch,
     /// Re-wiring epoch for `DataKey::RegistrationContract`, bumped by every

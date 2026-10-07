@@ -9,7 +9,7 @@
  * Skips automatically unless all of the following are set:
  *   INTEGRATION_RPC_URL    e.g. https://soroban-testnet.stellar.org
  *   INTEGRATION_NETWORK    "testnet" | "mainnet" (must match the `networks` key
- *                          exported by @scoutchain/bindings-progress)
+ *                          exported by @promiscope/bindings-progress)
  *   INTEGRATION_PLAYER_ID  numeric player_id of a player with at least one
  *                          advance_level entry on-chain
  *
@@ -20,7 +20,7 @@
  *   npx vitest run examples/getPlayerHistory.integration.test.ts
  */
 import { describe, it, expect } from "vitest";
-import { Client as ProgressClient, networks } from "@scoutchain/bindings-progress";
+import { Client as ProgressClient, networks } from "@promiscope/bindings-progress";
 import { getPlayerHistory } from "./getPlayerHistory";
 
 const { INTEGRATION_RPC_URL, INTEGRATION_NETWORK, INTEGRATION_PLAYER_ID } = process.env;

@@ -195,7 +195,7 @@ pub trait AdminError {
 /// # Usage
 ///
 /// ```ignore
-/// use scoutchain_shared_types::require_admin;
+/// use promiscope_shared_types::require_admin;
 ///
 /// // Inside a contract function returning Result<(), MyError>:
 /// let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
@@ -348,7 +348,7 @@ where
 /// # Usage
 ///
 /// ```ignore
-/// use scoutchain_shared_types::safe_math::{safe_add_u32, safe_add_i128};
+/// use promiscope_shared_types::safe_math::{safe_add_u32, safe_add_i128};
 ///
 /// // In a contract function:
 /// let next_count = safe_add_u32(current_count, 1)

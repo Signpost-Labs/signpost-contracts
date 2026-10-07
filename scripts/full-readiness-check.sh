@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — full post-deploy readiness check
+# Promiscope — full post-deploy readiness check
 #
 # Combines health-check.sh (init/pause status for all four contracts) and
 # verify-cross-contract-wiring.sh (all eight cross-contract wiring links,
@@ -98,7 +98,7 @@ invoke() {
 }
 
 echo "============================================"
-echo "  ScoutChain Full Readiness Check"
+echo "  Promiscope Full Readiness Check"
 echo "  Network: $NETWORK"
 echo "============================================"
 

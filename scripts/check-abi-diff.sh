@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — ABI-diff CI gate
+# Promiscope — ABI-diff CI gate
 #
 # Compares the PR branch's abi/*-abi.json against main's and classifies
 # each contract's change severity per docs/VERSIONING.md. Fails if a
@@ -176,10 +176,10 @@ if [[ ! -d "$ABI_DIR" ]] || [[ -z "$(ls -A "$ABI_DIR" 2>/dev/null)" ]]; then
   mkdir -p "$ABI_DIR"
   WASM=target/wasm32v1-none/release
   for contract in "${CONTRACTS[@]}"; do
-    wasm="${WASM}/scoutchain_${contract}.wasm"
+    wasm="${WASM}/promiscope_${contract}.wasm"
     if [[ ! -f "$wasm" ]]; then
       echo "    Building $contract..."
-      cargo build -p scoutchain-${contract} --target wasm32v1-none --release
+      cargo build -p promiscope-${contract} --target wasm32v1-none --release
     fi
     echo "    Exporting $contract ABI..."
     stellar contract info interface --wasm "$wasm" --output json-formatted > "$ABI_DIR/${contract}-abi.json"

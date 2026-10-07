@@ -7,12 +7,12 @@
 /// These tests would silently pass (incorrectly) with the old hand-rolled
 /// mock client in scout_access — they require the real #[contractclient]
 /// implementation that makes genuine cross-contract calls.
-use scoutchain_progress::{ProgressContract, ProgressContractClient};
-use scoutchain_scout_access::{
+use promiscope_progress::{ProgressContract, ProgressContractClient};
+use promiscope_scout_access::{
     FeeConfig, ScoutAccessContract, ScoutAccessContractClient, SubscriptionTier,
 };
-use scoutchain_shared_types::ProgressLevel;
-use scoutchain_verification::{VerificationContract, VerificationContractClient};
+use promiscope_shared_types::ProgressLevel;
+use promiscope_verification::{VerificationContract, VerificationContractClient};
 use soroban_sdk::{
     testutils::{Address as _, Ledger},
     token::StellarAssetClient,

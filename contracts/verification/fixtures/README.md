@@ -1,11 +1,11 @@
-# `scoutchain_progress.wasm` fixture
+# `promiscope_progress.wasm` fixture
 
 ## What this file is
 
-`scoutchain_progress.wasm` is a compiled **WASM build of the
-`scoutchain-progress` contract** (`contracts/progress/`). It is *not* a
+`promiscope_progress.wasm` is a compiled **WASM build of the
+`promiscope-progress` contract** (`contracts/progress/`). It is *not* a
 hand-written mock: it is the real contract compiled for Soroban so that the
-`scoutchain-verification` contract can generate a **type-safe client for its
+`promiscope-verification` contract can generate a **type-safe client for its
 cross-contract calls**.
 
 It is consumed at compile time by this crate in
@@ -13,7 +13,7 @@ It is consumed at compile time by this crate in
 
 ```rust
 mod progress_contract {
-    soroban_sdk::contractimport!(file = "fixtures/scoutchain_progress.wasm");
+    soroban_sdk::contractimport!(file = "fixtures/promiscope_progress.wasm");
 }
 ```
 
@@ -27,14 +27,14 @@ invoke `try_advance_level` and to special-case `AlreadyAtMaxLevel` (see
 
 Because the client mirrors the *real* deployed contract's ABI, tests and
 cross-contract wiring here are guaranteed to line up with what the production
-`scoutchain-progress` contract exports. **Do not replace this binary with a
+`promiscope-progress` contract exports. **Do not replace this binary with a
 hand-written `.wasm` or a synthetic mock** unless you can guarantee the
 generated client's `ProgressLevel`/`ProgressError` encodings (including
 discriminant values) are byte-identical to the deployed contract.
 
 ## Where it was built from
 
-- **Source crate:** `contracts/progress/` (package `scoutchain-progress`)
+- **Source crate:** `contracts/progress/` (package `promiscope-progress`)
 - **Crate version:** `1.1.0` (`version.workspace` — see root `Cargo.toml`)
 - **Target:** `wasm32v1-none` (the Soroban WASM target pinned in
   `rust-toolchain.toml`, channel `1.97.1`)
@@ -64,7 +64,7 @@ SHA-256: 9b6750e03a681c19dc5c5cc0a494055b9d1fcfba6e9e5439a5d0503abb877686
 
 ## Regenerating
 
-Whenever the `scoutchain-progress` public interface changes — for example,
+Whenever the `promiscope-progress` public interface changes — for example,
 `advance_level`'s signature, `ProgressLevel`, or any `ProgressError` variant
 or its `#[repr]` discriminant values — regenerate the fixture and commit the
 updated binary so the verification client stays in sync.
@@ -72,14 +72,14 @@ updated binary so the verification client stays in sync.
 From the repository root:
 
 ```bash
-cargo build -p scoutchain-progress --target wasm32v1-none --release
-cp target/wasm32v1-none/release/scoutchain_progress.wasm \
-   contracts/verification/fixtures/scoutchain_progress.wasm
+cargo build -p promiscope-progress --target wasm32v1-none --release
+cp target/wasm32v1-none/release/promiscope_progress.wasm \
+   contracts/verification/fixtures/promiscope_progress.wasm
 ```
 
 This is the same build used by `scripts/smoke-test.sh` (`cargo build
 --workspace --target wasm32v1-none --release`, artifact
-`target/wasm32v1-none/release/scoutchain_progress.wasm`). Note that the
+`target/wasm32v1-none/release/promiscope_progress.wasm`). Note that the
 fixture is the **pre-optimization release build** — do not run
 `stellar contract optimize` on it; optimization is a deployment-time step
 that would emit a different binary than the interface codegen expects.
@@ -87,18 +87,18 @@ that would emit a different binary than the interface codegen expects.
 After copying, verify the interface regenerates cleanly:
 
 ```bash
-cargo check -p scoutchain-verification --target wasm32v1-none
+cargo check -p promiscope-verification --target wasm32v1-none
 ```
 
 ### Committing the regenerated fixture
 
 The file is ignored by git, but it is *already tracked*, so updates stage
-normally with `git add contracts/verification/fixtures/scoutchain_progress.wasm`.
+normally with `git add contracts/verification/fixtures/promiscope_progress.wasm`.
 Only a fresh checkout that has lost the binary (e.g. a `.gitattributes`
 change or a re-base that dropped the tracked blob) would need a force-add:
 
 ```bash
-git add -f contracts/verification/fixtures/scoutchain_progress.wasm
+git add -f contracts/verification/fixtures/promiscope_progress.wasm
 ```
 
 ## When editing the progress contract

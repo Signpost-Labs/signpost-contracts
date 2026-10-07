@@ -195,9 +195,9 @@ echo ""
 echo "=== Error code drift check ==="
 echo ""
 
-check_error_codes "registration (ScoutChainError)" \
+check_error_codes "registration (PromiscopeError)" \
   "$REPO_ROOT/contracts/registration/src/errors.rs" \
-  "### \`ScoutChainError\`"
+  "### \`PromiscopeError\`"
 
 check_error_codes "verification (VerificationError)" \
   "$REPO_ROOT/contracts/verification/src/errors.rs" \

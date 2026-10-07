@@ -3,7 +3,7 @@
 //! Covers `admin_seed_milestone` and `admin_seed_dispute` in the verification
 //! contract, plus migration-window management.
 
-use scoutchain_verification::{
+use promiscope_verification::{
     Milestone, MilestoneDispute, VerificationContract, VerificationContractClient,
     VerificationError,
 };

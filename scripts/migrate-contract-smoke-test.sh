@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — end-to-end smoke test for the address-migration tooling against
+# Promiscope — end-to-end smoke test for the address-migration tooling against
 # a local Soroban sandbox, with a before/after state comparison.
 #
 # This mirrors the sandbox setup used by the `bindings-smoke-test` job in
@@ -22,7 +22,7 @@
 set -euo pipefail
 
 NETWORK="local"
-CONTAINER="scoutchain-migrate-smoke"
+CONTAINER="promiscope-migrate-smoke"
 RPC_URL="http://localhost:8000/soroban/rpc"
 PASSPHRASE="Standalone Network ; February 2017"
 # Fallback only — replaced below with the id of the native-asset SAC this

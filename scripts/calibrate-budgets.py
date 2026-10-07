@@ -42,7 +42,7 @@ def parse_cpu_report(path: Path) -> dict[str, dict[str, int]]:
     - New format (println! from assert_cpu_budget):
         cost_budget: progress::advance_level = 403752 cpu instructions (budget 15000000)
     - Legacy format (cargo test output):
-        scoutchain_scout_access::tests::cost_budget::test_subscribe_cost ... passed: 3_421_000
+        promiscope_scout_access::tests::cost_budget::test_subscribe_cost ... passed: 3_421_000
     """
     if not path.exists():
         return {}
@@ -55,8 +55,8 @@ def parse_cpu_report(path: Path) -> dict[str, dict[str, int]]:
             contract, op, cost = m.group(1), m.group(2), int(m.group(3))
             results.setdefault(contract, {})[op] = cost
             continue
-        # Legacy format: scoutchain_<contract>::tests::cost_budget::test_<op>_cost ... passed: <cost>
-        m = re.search(r"scoutchain_(\w+)::tests::cost_budget::test_(\w+)_cost", line)
+        # Legacy format: promiscope_<contract>::tests::cost_budget::test_<op>_cost ... passed: <cost>
+        m = re.search(r"promiscope_(\w+)::tests::cost_budget::test_(\w+)_cost", line)
         if m:
             contract, op = m.group(1), m.group(2)
             cost_match = re.search(r"passed:\s*([\d_]+)", line)

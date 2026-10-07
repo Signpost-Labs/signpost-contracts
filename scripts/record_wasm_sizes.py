@@ -11,8 +11,8 @@ def main():
 
     contract = sys.argv[1]
     wasm_dir = os.environ.get("WASM", "target/wasm32v1-none/release")
-    wasm_src = os.path.join(wasm_dir, f"scoutchain_{contract}.wasm")
-    wasm_opt = os.path.join(wasm_dir, f"scoutchain_{contract}.optimized.wasm")
+    wasm_src = os.path.join(wasm_dir, f"promiscope_{contract}.wasm")
+    wasm_opt = os.path.join(wasm_dir, f"promiscope_{contract}.optimized.wasm")
     sizes_file = "abi/wasm-sizes.json"
 
     # Optimize WASM

@@ -14,7 +14,7 @@
 //! therefore scopes authorization to a single address with `mock_auths` so the
 //! rejection is genuinely proven.
 
-use scoutchain_progress::{DataKey, ProgressContract, ProgressContractClient, ProgressError};
+use promiscope_progress::{DataKey, ProgressContract, ProgressContractClient, ProgressError};
 use soroban_sdk::{
     testutils::{Address as _, MockAuth, MockAuthInvoke},
     Address, Env, IntoVal,

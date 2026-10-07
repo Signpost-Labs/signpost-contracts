@@ -5,12 +5,12 @@
  * and a pre-registered player — standing up the full `register_validator` +
  * `register_player` + funded-signer flow is out of scope for this reference
  * example. Port this test alongside `approveMilestone()` into
- * `scoutchain-backend`, where that fixture setup already exists.
+ * `promiscope-backend`, where that fixture setup already exists.
  *
  * Skips automatically unless all of the following are set:
  *   INTEGRATION_RPC_URL       e.g. https://soroban-testnet.stellar.org
  *   INTEGRATION_NETWORK       "testnet" | "mainnet" (must match the `networks`
- *                             key exported by @scoutchain/bindings-verification)
+ *                             key exported by @promiscope/bindings-verification)
  *   INTEGRATION_SECRET        secret key (S...) of a registered, active validator
  *   INTEGRATION_PLAYER_ID     numeric player_id of an existing, active player
  *   INTEGRATION_EVIDENCE_HASH IPFS/Arweave CID of the evidence document, already
@@ -31,7 +31,7 @@ import { Keypair, TransactionBuilder } from "@stellar/stellar-base";
 import {
   Client as VerificationClient,
   networks,
-} from "@scoutchain/bindings-verification";
+} from "@promiscope/bindings-verification";
 import { approveMilestone } from "./approveMilestone";
 
 const {

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — cross-contract smoke test for approve_milestone → advance_level
+# Promiscope — cross-contract smoke test for approve_milestone → advance_level
 #
 # Deploys verification and progress contracts to testnet, wires them, and
 # exercises the real cross-contract call: approve_milestone on verification
@@ -14,11 +14,11 @@ DEPLOYER="${DEPLOYER_SECRET:?Set DEPLOYER_SECRET}"
 ADMIN="${ADMIN_ADDRESS:?Set ADMIN_ADDRESS}"
 
 WASM_DIR="target/wasm32v1-none/release"
-VER_WASM="${WASM_DIR}/scoutchain_verification.optimized.wasm"
-PROG_WASM="${WASM_DIR}/scoutchain_progress.optimized.wasm"
+VER_WASM="${WASM_DIR}/promiscope_verification.optimized.wasm"
+PROG_WASM="${WASM_DIR}/promiscope_progress.optimized.wasm"
 
 echo "============================================"
-echo "  ScoutChain Cross-Contract Smoke Test"
+echo "  Promiscope Cross-Contract Smoke Test"
 echo "============================================"
 
 # 1. Build contracts
@@ -27,9 +27,9 @@ echo "==> Building contracts..."
 cargo build --workspace --target wasm32v1-none --release
 
 echo "==> Optimizing wasm..."
-stellar contract optimize --wasm "${WASM_DIR}/scoutchain_verification.wasm" \
+stellar contract optimize --wasm "${WASM_DIR}/promiscope_verification.wasm" \
   --wasm-out "$VER_WASM"
-stellar contract optimize --wasm "${WASM_DIR}/scoutchain_progress.wasm" \
+stellar contract optimize --wasm "${WASM_DIR}/promiscope_progress.wasm" \
   --wasm-out "$PROG_WASM"
 
 # 2. Deploy contracts

@@ -4,7 +4,7 @@ use soroban_sdk::{contracttype, Address, Bytes, BytesN, String, Vec};
 #[allow(dead_code)]
 const MAX_MIGRATION_NONCES: u32 = 1024;
 
-pub use scoutchain_shared_types::{
+pub use promiscope_shared_types::{
     ContractHealth, PlayerProfile, PlayerSummary, PlayerVitals, ProgressLevel,
     StoredPlayerProfile, WiringLink,
 };

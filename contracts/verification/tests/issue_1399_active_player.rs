@@ -1,8 +1,8 @@
 //! Issue #1399: milestone commit paths require an active registered player
 //! when registration is wired; unwired registration remains permissive.
 
-use scoutchain_shared_types::ProgressLevel;
-use scoutchain_verification::{
+use promiscope_shared_types::ProgressLevel;
+use promiscope_verification::{
     RegPlayerProfile, RegPlayerVitals, VerificationContract, VerificationContractClient,
     VerificationError,
 };

@@ -5,7 +5,7 @@
 //! (`ValidatorRegLastSent` + `RegCooldownSecs`) has not elapsed, returning
 //! `RegistrationCooldown` (code 25).
 
-use scoutchain_verification::{VerificationContract, VerificationContractClient};
+use promiscope_verification::{VerificationContract, VerificationContractClient};
 use soroban_sdk::{
     testutils::{Address as _, Ledger as _},
     vec, Address, Env, String, Vec,
@@ -62,7 +62,7 @@ fn test_register_validator_respects_cooldown() {
         matches!(
             result,
             Err(Ok(
-                scoutchain_verification::VerificationError::RegistrationCooldown
+                promiscope_verification::VerificationError::RegistrationCooldown
             ))
         ),
         "re-registration within cooldown must return RegistrationCooldown: {result:?}"
@@ -105,7 +105,7 @@ fn test_register_validator_cooldown_expires() {
         matches!(
             result,
             Err(Ok(
-                scoutchain_verification::VerificationError::ValidatorAlreadyRegistered
+                promiscope_verification::VerificationError::ValidatorAlreadyRegistered
             ))
         ),
         "after cooldown the wallet is detected as already registered: {result:?}"
@@ -138,7 +138,7 @@ fn test_batch_register_validators_respects_cooldown() {
         matches!(
             result,
             Err(Ok(
-                scoutchain_verification::VerificationError::RegistrationCooldown
+                promiscope_verification::VerificationError::RegistrationCooldown
             ))
         ),
         "batch with a cooldown-locked wallet must return RegistrationCooldown: {result:?}"
@@ -170,7 +170,7 @@ fn test_batch_register_validators_succeeds_with_cooldown_enabled() {
 /// until the cooldown elapses (issue #1392).
 #[test]
 fn test_batch_register_records_cooldown_blocking_reregister_after_revoke() {
-    use scoutchain_verification::{RevocationSeverity, VerificationError};
+    use promiscope_verification::{RevocationSeverity, VerificationError};
 
     let (env, client) = setup();
     let wallet = Address::generate(&env);

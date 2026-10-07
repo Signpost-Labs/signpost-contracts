@@ -9,7 +9,7 @@
 //! 5. Non-admin callers are rejected.
 //! 6. Unknown scout_id returns ScoutNotFound.
 
-use scoutchain_registration::{RegistrationContract, RegistrationContractClient, ScoutStatus};
+use promiscope_registration::{RegistrationContract, RegistrationContractClient, ScoutStatus};
 use soroban_sdk::testutils::{Address as _, Events, MockAuth, MockAuthInvoke};
 use soroban_sdk::{vec, Address, Env, String, Val, Vec};
 

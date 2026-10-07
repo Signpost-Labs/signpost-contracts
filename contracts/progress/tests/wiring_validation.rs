@@ -3,10 +3,10 @@
 //! These tests verify that level changes require a wired registration contract
 //! and properly validate player existence.
 
-use scoutchain_progress::{ProgressContract, ProgressContractClient, ProgressError};
-use scoutchain_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
-use scoutchain_shared_types::ProgressLevel;
-use scoutchain_verification::{VerificationContract, VerificationContractClient};
+use promiscope_progress::{ProgressContract, ProgressContractClient, ProgressError};
+use promiscope_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
+use promiscope_shared_types::ProgressLevel;
+use promiscope_verification::{VerificationContract, VerificationContractClient};
 use soroban_sdk::{
     testutils::{Address as _, MockAuth, MockAuthInvoke},
     Address, Env, String, Vec,

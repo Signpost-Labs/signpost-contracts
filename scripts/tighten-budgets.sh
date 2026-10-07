@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — suggest tightened values for both CI budget files.
+# Promiscope — suggest tightened values for both CI budget files.
 #
 # Implements the "measure then tighten" follow-up documented in
 # ci/wasm-size-budget.json and ci/cpu-cost-budget.md.  This is the
@@ -165,8 +165,8 @@ if [[ "$DO_WASM" == "true" ]]; then
 
   header "Optimising and measuring WASM sizes"
   for name in "${CONTRACTS[@]}"; do
-    src_wasm="${WASM_DIR}/scoutchain_${name}.wasm"
-    opt_wasm="${WASM_DIR}/scoutchain_${name}.optimized.wasm"
+    src_wasm="${WASM_DIR}/promiscope_${name}.wasm"
+    opt_wasm="${WASM_DIR}/promiscope_${name}.optimized.wasm"
 
     if [[ ! -f "$src_wasm" ]]; then
       warn "No WASM found for $name at $src_wasm — skipping"

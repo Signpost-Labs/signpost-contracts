@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — generate TypeScript bindings for all contracts
+# Promiscope — generate TypeScript bindings for all contracts
 # Usage: ./scripts/generate-bindings.sh [testnet|mainnet]
 # Requires .env.contracts to exist (written by deploy.sh)
 set -euo pipefail

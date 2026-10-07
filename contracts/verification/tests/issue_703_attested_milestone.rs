@@ -8,13 +8,13 @@
 //! 5. CPU cost of submit_attested_milestone vs approve_milestone
 
 use ed25519_dalek::{Signer, SigningKey};
-use scoutchain_verification::{
+use promiscope_verification::{
     MilestoneAttestation, VerificationContract, VerificationContractClient, VerificationError,
 };
 use soroban_sdk::{testutils::Address as _, xdr::ToXdr, Address, Bytes, BytesN, Env, String};
 
 const CREDENTIALS: &str = "UEFA-B-License-2026";
-const ATTESTATION_DOMAIN: &str = "ScoutChain-MilestoneAttestation-v2";
+const ATTESTATION_DOMAIN: &str = "Promiscope-MilestoneAttestation-v2";
 
 const CID_A: &str = "QmPK1s3pNYLi9ERiq3BDxKa4XosgWwFRQUydHUtz4YgpqB";
 const CID_B: &str = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";

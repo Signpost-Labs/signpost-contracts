@@ -24,7 +24,7 @@
 //!    `TooManyPendingVotes`.
 
 use ed25519_dalek::{Signer, SigningKey};
-use scoutchain_verification::{
+use promiscope_verification::{
     AttestationStatus, MilestoneAttestation, VerificationContract, VerificationContractClient,
     VerificationError,
 };
@@ -36,7 +36,7 @@ use soroban_sdk::{
 };
 
 const CREDENTIALS: &str = "UEFA-B-License-2026";
-const ATTESTATION_DOMAIN: &str = "ScoutChain-MilestoneAttestation-v2";
+const ATTESTATION_DOMAIN: &str = "Promiscope-MilestoneAttestation-v2";
 const DEFAULT_VOTING_WINDOW_SECS: u64 = 1_209_600; // 14 days — must match lib.rs default
 
 fn setup() -> (Env, VerificationContractClient<'static>, Address, Address) {

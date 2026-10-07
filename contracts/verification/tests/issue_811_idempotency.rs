@@ -8,7 +8,7 @@
 //! transaction, the dedup key is rolled back with it and the retry applies
 //! exactly once. These tests prove both properties.
 
-use scoutchain_verification::{VerificationContract, VerificationContractClient};
+use promiscope_verification::{VerificationContract, VerificationContractClient};
 use soroban_sdk::{testutils::Address as _, Address, Env, String};
 
 const VALID_CID: &str = "QmPK1s3pNYLi9ERiq3BDxKa4XosgWwFRQUydHUtz4YgpqB";
@@ -22,8 +22,8 @@ fn test_approve_milestone_progress_call_failed_reverts_all_state() {
     let verification_id = env.register(VerificationContract, ());
     let verification_client = VerificationContractClient::new(&env, &verification_id);
 
-    let progress_id = env.register(scoutchain_progress::ProgressContract, ());
-    let progress_client = scoutchain_progress::ProgressContractClient::new(&env, &progress_id);
+    let progress_id = env.register(promiscope_progress::ProgressContract, ());
+    let progress_client = promiscope_progress::ProgressContractClient::new(&env, &progress_id);
 
     let admin = Address::generate(&env);
     let validator = Address::generate(&env);
@@ -62,7 +62,7 @@ fn test_approve_milestone_progress_call_failed_reverts_all_state() {
     let counter: u32 = env.as_contract(&verification_id, || {
         env.storage()
             .persistent()
-            .get(&scoutchain_verification::DataKey::MilestoneCounter(
+            .get(&promiscope_verification::DataKey::MilestoneCounter(
                 player_id,
             ))
             .unwrap_or(0)
@@ -76,8 +76,8 @@ fn test_approve_milestone_progress_call_failed_reverts_all_state() {
     let milestone = env.as_contract(&verification_id, || {
         env.storage()
             .persistent()
-            .get::<scoutchain_verification::DataKey, scoutchain_verification::Milestone>(
-                &scoutchain_verification::DataKey::Milestone(player_id, 1),
+            .get::<promiscope_verification::DataKey, promiscope_verification::Milestone>(
+                &promiscope_verification::DataKey::Milestone(player_id, 1),
             )
     });
     assert!(
@@ -89,7 +89,7 @@ fn test_approve_milestone_progress_call_failed_reverts_all_state() {
     let evidence_used = env.as_contract(&verification_id, || {
         env.storage()
             .persistent()
-            .has(&scoutchain_verification::DataKey::EvidenceUsed(
+            .has(&promiscope_verification::DataKey::EvidenceUsed(
                 String::from_str(&env, VALID_CID),
             ))
     });
@@ -147,7 +147,7 @@ fn test_approve_milestone_duplicate_evidence_prevents_double_commit_on_retry() {
     assert_eq!(
         retry,
         Err(Ok(
-            scoutchain_verification::VerificationError::DuplicateEvidence
+            promiscope_verification::VerificationError::DuplicateEvidence
         )),
         "Retry reusing the same evidence hash must be rejected as a duplicate"
     );

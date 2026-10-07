@@ -13,9 +13,9 @@
 //! proptest over a finite action domain) rather than proptest macros, which
 //! don't work in no_std WASM context.
 
-use scoutchain_progress::{ProgressContract, ProgressContractClient};
-use scoutchain_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
-use scoutchain_shared_types::ProgressLevel;
+use promiscope_progress::{ProgressContract, ProgressContractClient};
+use promiscope_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
+use promiscope_shared_types::ProgressLevel;
 use soroban_sdk::{testutils::Address as _, Address, Env, String, Vec};
 
 fn valid_vitals(env: &Env) -> PlayerVitals {
@@ -143,7 +143,7 @@ fn test_sequential_forward_only() {
 /// Advancing past EliteTier returns AlreadyAtMaxLevel — level does not change.
 #[test]
 fn test_cannot_exceed_elite_tier() {
-    use scoutchain_progress::ProgressError;
+    use promiscope_progress::ProgressError;
     let h = setup();
     let pid = register_player(&h);
 
@@ -327,7 +327,7 @@ fn test_exhaustive_action_sequences() {
 /// Pausing the contract blocks advance_level and reset_player_level.
 #[test]
 fn test_paused_contract_blocks_all_mutations() {
-    use scoutchain_progress::ProgressError;
+    use promiscope_progress::ProgressError;
     let h = setup();
     let pid = register_player(&h);
 

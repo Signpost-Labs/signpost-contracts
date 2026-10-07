@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — orchestrate a full "Address migration (new contract ID)".
+# Promiscope — orchestrate a full "Address migration (new contract ID)".
 #
 # Use this ONLY when a bug cannot be fixed with an in-place upgrade()
 # (e.g. a storage-layout change) and a fresh contract deploy with a NEW
@@ -110,7 +110,7 @@ run_step() {
 # Preconditions
 # ---------------------------------------------------------------------------
 echo "=========================================================================="
-echo "  ScoutChain ADDRESS MIGRATION (new contract ID) — network: $NETWORK"
+echo "  Promiscope ADDRESS MIGRATION (new contract ID) — network: $NETWORK"
 echo "=========================================================================="
 [[ "$DRY_RUN" -eq 1 ]] && echo "  Mode: DRY RUN — no contracts will be deployed, paused, or mutated."
 echo ""

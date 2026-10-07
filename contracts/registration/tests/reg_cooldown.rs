@@ -4,7 +4,7 @@
 //! of the same wallet while its cooldown window has not elapsed,
 //! returning `RegistrationCooldown` (code 16).
 
-use scoutchain_registration::{RegistrationContract, RegistrationContractClient};
+use promiscope_registration::{RegistrationContract, RegistrationContractClient};
 use soroban_sdk::{
     testutils::{Address as _, Ledger as _},
     vec, Address, Env, String, Vec,

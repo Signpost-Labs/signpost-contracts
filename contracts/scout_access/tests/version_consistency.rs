@@ -1,7 +1,7 @@
-use scoutchain_progress::{ProgressContract, ProgressContractClient};
-use scoutchain_registration::{RegistrationContract, RegistrationContractClient};
-use scoutchain_scout_access::{ScoutAccessContract, ScoutAccessContractClient};
-use scoutchain_verification::{VerificationContract, VerificationContractClient};
+use promiscope_progress::{ProgressContract, ProgressContractClient};
+use promiscope_registration::{RegistrationContract, RegistrationContractClient};
+use promiscope_scout_access::{ScoutAccessContract, ScoutAccessContractClient};
+use promiscope_verification::{VerificationContract, VerificationContractClient};
 use soroban_sdk::{Env, String};
 
 #[test]

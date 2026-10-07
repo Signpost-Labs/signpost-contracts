@@ -1,4 +1,4 @@
--- ScoutChain — initial PostgreSQL schema
+-- Promiscope — initial PostgreSQL schema
 -- Run by the backend on first startup or via a migration tool (e.g. node-pg-migrate)
 --
 -- Note: validator deactivation status is tracked via the `active` BOOLEAN column

@@ -14,7 +14,7 @@
 //! 8. CPU-budget: a bounded cascade call (limit=50) against a validator with
 //!    500+ prior approvals stays within budget.
 
-use scoutchain_verification::{
+use promiscope_verification::{
     RevocationSeverity, VerificationContract, VerificationContractClient, VerificationError,
 };
 use soroban_sdk::{testutils::Address as _, Address, Env, String, Vec};

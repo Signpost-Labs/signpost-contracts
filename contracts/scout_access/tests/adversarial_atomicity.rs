@@ -27,12 +27,12 @@
 //!
 //! See: ai.md §"Error Handling — ProgressCallFailed"
 
-use scoutchain_progress::{ProgressContract, ProgressContractClient};
-use scoutchain_scout_access::{
+use promiscope_progress::{ProgressContract, ProgressContractClient};
+use promiscope_scout_access::{
     FeeConfig, ScoutAccessContract, ScoutAccessContractClient, SubscriptionTier,
 };
-use scoutchain_shared_types::ProgressLevel;
-use scoutchain_verification::{VerificationContract, VerificationContractClient};
+use promiscope_shared_types::ProgressLevel;
+use promiscope_verification::{VerificationContract, VerificationContractClient};
 use soroban_sdk::{
     testutils::{Address as _, Ledger},
     token::StellarAssetClient,
@@ -264,7 +264,7 @@ fn test_confirm_trial_offer_bad_progress_returns_progress_call_failed() {
         matches!(
             result,
             Err(Ok(
-                scoutchain_scout_access::ScoutAccessError::ProgressCallFailed
+                promiscope_scout_access::ScoutAccessError::ProgressCallFailed
             ))
         ),
         "expected ProgressCallFailed from confirm_trial_offer, got: {result:?}"
@@ -315,7 +315,7 @@ fn test_double_confirm_trial_offer_is_blocked() {
         matches!(
             result,
             Err(Ok(
-                scoutchain_scout_access::ScoutAccessError::TrialOfferAlreadyConfirmed
+                promiscope_scout_access::ScoutAccessError::TrialOfferAlreadyConfirmed
             ))
         ),
         "second confirm_trial_offer must return TrialOfferAlreadyConfirmed: {result:?}"

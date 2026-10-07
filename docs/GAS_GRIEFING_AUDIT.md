@@ -1,4 +1,4 @@
-# ScoutChain Gas-Griefing Resistance Audit
+# Promiscope Gas-Griefing Resistance Audit
 
 > **Issue:** #812
 > **Last reviewed:** July 2026

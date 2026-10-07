@@ -41,12 +41,12 @@
 //! double-confirmation attempt and the invariant checker confirms no double
 //! escrow release occurred.
 
-use scoutchain_progress::{ProgressContract, ProgressContractClient};
-use scoutchain_scout_access::{
+use promiscope_progress::{ProgressContract, ProgressContractClient};
+use promiscope_scout_access::{
     FeeConfig, ScoutAccessContract, ScoutAccessContractClient, SubscriptionTier,
 };
-use scoutchain_shared_types::ProgressLevel;
-use scoutchain_verification::{
+use promiscope_shared_types::ProgressLevel;
+use promiscope_verification::{
     RevocationSeverity, VerificationContract, VerificationContractClient,
 };
 use soroban_sdk::{
@@ -235,7 +235,7 @@ fn op_confirm_trial_offer(
     h: &mut ChaosHarness,
     player_id: u64,
     index: u32,
-) -> Result<(), scoutchain_scout_access::ScoutAccessError> {
+) -> Result<(), promiscope_scout_access::ScoutAccessError> {
     let player_wallet = Address::generate(&h.env);
     match h
         .scout_access
@@ -243,7 +243,7 @@ fn op_confirm_trial_offer(
     {
         Ok(Ok(())) => Ok(()),
         Err(Ok(e)) => Err(e),
-        _ => Err(scoutchain_scout_access::ScoutAccessError::ProgressCallFailed),
+        _ => Err(promiscope_scout_access::ScoutAccessError::ProgressCallFailed),
     }
 }
 
@@ -301,7 +301,7 @@ fn check_invariants(h: &ChaosHarness, state: &ScheduleState, schedule_name: &str
             matches!(
                 result,
                 Err(Ok(
-                    scoutchain_scout_access::ScoutAccessError::TrialOfferAlreadyConfirmed
+                    promiscope_scout_access::ScoutAccessError::TrialOfferAlreadyConfirmed
                 ))
             ),
             "[{schedule_name}] INVARIANT BROKEN: no-orphaned-escrow violated — \
@@ -510,7 +510,7 @@ fn chaos_cross_contract_invariants() {
             assert!(
                 matches!(
                     second,
-                    Err(scoutchain_scout_access::ScoutAccessError::TrialOfferAlreadyConfirmed)
+                    Err(promiscope_scout_access::ScoutAccessError::TrialOfferAlreadyConfirmed)
                 ),
                 "[schedule_5] HARNESS PROOF: second confirm_trial_offer must return \
                  TrialOfferAlreadyConfirmed — the harness correctly catches this bug. Got: {second:?}"

@@ -44,7 +44,7 @@
 //!
 //! See: ai.md §"Error Handling — ProgressCallFailed"
 
-use scoutchain_verification::{VerificationContract, VerificationContractClient};
+use promiscope_verification::{VerificationContract, VerificationContractClient};
 use soroban_sdk::{testutils::Address as _, Address, Env, String};
 
 // ---------------------------------------------------------------------------
@@ -197,7 +197,7 @@ fn test_approve_milestone_bad_wiring_returns_progress_call_failed() {
         matches!(
             result,
             Err(Ok(
-                scoutchain_verification::VerificationError::ProgressCallFailed
+                promiscope_verification::VerificationError::ProgressCallFailed
             ))
         ),
         "expected ProgressCallFailed, got: {result:?}"
@@ -251,7 +251,7 @@ fn test_duplicate_evidence_idempotency_token_blocks_replay() {
         matches!(
             second,
             Err(Ok(
-                scoutchain_verification::VerificationError::DuplicateEvidence
+                promiscope_verification::VerificationError::DuplicateEvidence
             ))
         ),
         "second call with same evidence hash must return DuplicateEvidence: {second:?}"
@@ -279,7 +279,7 @@ fn test_duplicate_evidence_idempotency_token_blocks_replay() {
 /// transaction with fresh evidence is submitted).
 #[test]
 fn test_retry_with_fresh_evidence_hash_succeeds_after_wiring_fixed() {
-    use scoutchain_progress::{ProgressContract, ProgressContractClient};
+    use promiscope_progress::{ProgressContract, ProgressContractClient};
 
     let env = Env::default();
     env.mock_all_auths();
@@ -365,7 +365,7 @@ fn test_validator_cap_bounds_evidence_storage() {
         matches!(
             result,
             Err(Ok(
-                scoutchain_verification::VerificationError::ValidatorCapReached
+                promiscope_verification::VerificationError::ValidatorCapReached
             ))
         ),
         "101st validator registration must return ValidatorCapReached: {result:?}"

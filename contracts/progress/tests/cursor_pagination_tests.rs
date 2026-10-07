@@ -6,9 +6,9 @@
 //! `get_progress_history_page` which can skip or duplicate entries under
 //! concurrent mutation.
 
-use scoutchain_progress::{ProgressContract, ProgressContractClient};
-use scoutchain_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
-use scoutchain_shared_types::ProgressLevel;
+use promiscope_progress::{ProgressContract, ProgressContractClient};
+use promiscope_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
+use promiscope_shared_types::ProgressLevel;
 use soroban_sdk::{testutils::Address as _, Address, Env, String, Vec};
 
 fn valid_vitals(env: &Env) -> PlayerVitals {

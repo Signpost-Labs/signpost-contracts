@@ -77,7 +77,7 @@ PROGRESS_CONTRACT_ID=C... \
 
 ```bash
 RPC_URL=https://soroban-testnet-rpc.stellar.org \
-DATABASE_URL=postgres://user:pass@host:5432/scoutchain \
+DATABASE_URL=postgres://user:pass@host:5432/promiscope \
 PROGRESS_CONTRACT_ID=C... \
   node scripts/audit-event-history.js 42
 ```

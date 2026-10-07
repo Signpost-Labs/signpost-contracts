@@ -1,5 +1,5 @@
 #![allow(deprecated, dead_code)]
-use scoutchain_shared_types::ProgressLevel;
+use promiscope_shared_types::ProgressLevel;
 use soroban_sdk::{Address, BytesN, Env, Symbol};
 
 pub const ADMIN_TRANSFERRED: &str = "admin_transferred";

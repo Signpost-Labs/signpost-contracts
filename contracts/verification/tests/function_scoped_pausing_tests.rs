@@ -6,7 +6,7 @@
 //! - Interaction between whole-contract pause and function-scoped pause
 //! - Admin controls for pause/unpause
 
-use scoutchain_verification::{
+use promiscope_verification::{
     RevocationSeverity, VerificationContract, VerificationContractClient,
 };
 use soroban_sdk::{
@@ -310,7 +310,7 @@ fn test_get_validator_works_when_approve_milestone_paused() {
 
     assert_eq!(
         validator_status,
-        scoutchain_verification::ValidatorStatus::Active,
+        promiscope_verification::ValidatorStatus::Active,
         "validator should still be Active"
     );
 }

@@ -1,11 +1,11 @@
 # `updateProfile()` reference implementation
 
 Not generated, not built, not published — these two files exist purely as a
-reference for the `scoutchain-backend` team.
+reference for the `promiscope-backend` team.
 
 ## Why this exists
 
-`scoutchain-backend`'s `updateProfile()` currently returns
+`promiscope-backend`'s `updateProfile()` currently returns
 `stub-update-txid-${playerId.slice(0, 8)}` without submitting anything to the
 chain, so player profile updates are silently dropped after IPFS pinning
 (tracking issue: "Wire updateProfile() to Soroban update_profile contract
@@ -17,7 +17,7 @@ documents the exact call pattern to port over.
 
 - `updateProfile.ts` — builds and submits a real
   `update_profile(player_id, ipfs_hashes)` Soroban transaction via
-  `@scoutchain/bindings-registration`'s generated `Client`, and returns the
+  `@promiscope/bindings-registration`'s generated `Client`, and returns the
   transaction hash Soroban RPC assigned to it (`sendTransactionResponse.hash`)
   along with the `metadataUri` that was submitted. Throws on RPC/simulation
   failure, on contract-level rejection (e.g. `PlayerNotFound`), and on a
@@ -29,7 +29,7 @@ documents the exact call pattern to port over.
   `INTEGRATION_NETWORK`, `INTEGRATION_SECRET`, and `INTEGRATION_PLAYER_ID` are
   all set — see the file header for how to run it against testnet.
 
-## Porting this into `scoutchain-backend`
+## Porting this into `promiscope-backend`
 
 1. Copy `updateProfile.ts`'s logic into wherever `updateProfile()` currently
    builds the stub ID.

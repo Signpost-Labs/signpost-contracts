@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — initialize all deployed contracts
+# Promiscope — initialize all deployed contracts
 # Run after deploy.sh. Requires .env.contracts to exist.
 set -euo pipefail
 

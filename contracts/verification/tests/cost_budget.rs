@@ -11,7 +11,7 @@
 //! matching row in `ci/cpu-cost-budget.md` with a one-line justification in
 //! the PR description explaining why the growth is expected and acceptable.
 
-use scoutchain_verification::{
+use promiscope_verification::{
     RevocationSeverity, VerificationContract, VerificationContractClient,
 };
 use soroban_sdk::{testutils::Address as _, Address, Env, String, Vec};

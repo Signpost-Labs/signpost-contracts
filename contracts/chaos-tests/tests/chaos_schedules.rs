@@ -1,4 +1,4 @@
-//! Chaos/concurrency testing framework for ScoutChain.
+//! Chaos/concurrency testing framework for Promiscope.
 //!
 //! Runs randomized schedules mixing operations across all four contracts
 //! against a shared pool of players, scouts, and validators, then asserts

@@ -3,8 +3,8 @@
 //! Covers `admin_seed_history`, `open_migration_window`, and
 //! `close_migration_window` in the progress contract.
 
-use scoutchain_progress::{ProgressContract, ProgressContractClient, ProgressEntry, ProgressError};
-use scoutchain_shared_types::ProgressLevel;
+use promiscope_progress::{ProgressContract, ProgressContractClient, ProgressEntry, ProgressError};
+use promiscope_shared_types::ProgressLevel;
 use soroban_sdk::{testutils::Address as _, Address, BytesN, Env, Symbol};
 
 // ── helpers ───────────────────────────────────────────────────────────────────

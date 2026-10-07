@@ -8,7 +8,7 @@
 //! `ValidatorVector` once instead of once per wallet, and a batch that lists
 //! the same wallet twice is rejected up front so the resulting count is exact.
 
-use scoutchain_verification::{
+use promiscope_verification::{
     DataKey, RevocationSeverity, VerificationContract, VerificationContractClient,
     VerificationError,
 };
@@ -103,7 +103,7 @@ fn batch_revoke_skips_decrement_for_already_inactive_validator() {
             let w = env
                 .storage()
                 .persistent()
-                .get::<DataKey, scoutchain_verification::Validator>(&DataKey::Validator(
+                .get::<DataKey, promiscope_verification::Validator>(&DataKey::Validator(
                     wallets.get(i).unwrap(),
                 ))
                 .unwrap();

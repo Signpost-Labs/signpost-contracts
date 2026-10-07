@@ -35,11 +35,11 @@
 //! verify the storage mutation and the transfer are both observable, confirming
 //! they happen in the same transaction frame.
 
-use scoutchain_progress::{ProgressContract, ProgressContractClient};
-use scoutchain_scout_access::{
+use promiscope_progress::{ProgressContract, ProgressContractClient};
+use promiscope_scout_access::{
     FeeConfig, ScoutAccessContract, ScoutAccessContractClient, SubscriptionTier,
 };
-use scoutchain_verification::{VerificationContract, VerificationContractClient};
+use promiscope_verification::{VerificationContract, VerificationContractClient};
 use soroban_sdk::{
     testutils::{Address as _, Ledger},
     token::StellarAssetClient,

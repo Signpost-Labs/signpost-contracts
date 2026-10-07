@@ -1,12 +1,12 @@
 use std::collections::BTreeMap;
 
-use scoutchain_progress::{ProgressContract, ProgressContractClient};
-use scoutchain_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
-use scoutchain_scout_access::{
+use promiscope_progress::{ProgressContract, ProgressContractClient};
+use promiscope_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
+use promiscope_scout_access::{
     FeeConfig, ScoutAccessContract, ScoutAccessContractClient, SubscriptionTier,
 };
-use scoutchain_shared_types::ProgressLevel;
-use scoutchain_verification::{VerificationContract, VerificationContractClient};
+use promiscope_shared_types::ProgressLevel;
+use promiscope_verification::{VerificationContract, VerificationContractClient};
 use soroban_sdk::{testutils::Address as _, token::StellarAssetClient, Address, Env, String, Vec};
 
 /// Contact / subscription fees used by the harness (stroops).

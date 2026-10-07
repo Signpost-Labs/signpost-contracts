@@ -14,7 +14,7 @@
 //! therefore scopes authorization to a single address with `mock_auths` so the
 //! rejection is genuinely proven.
 
-use scoutchain_verification::{
+use promiscope_verification::{
     DataKey, VerificationContract, VerificationContractClient, VerificationError,
 };
 use soroban_sdk::{

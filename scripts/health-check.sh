@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — post-deploy health check
+# Promiscope — post-deploy health check
 # Calls health() on every deployed contract and asserts initialized: true, paused: false.
 # Usage: ./scripts/health-check.sh [testnet|mainnet|local]
 # Requires .env.contracts to exist (written by deploy.sh).

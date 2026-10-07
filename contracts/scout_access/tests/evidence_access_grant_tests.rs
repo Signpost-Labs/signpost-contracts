@@ -9,11 +9,11 @@
 //! append-only-grant-vs-live-entitlement lifecycle decision (a grant
 //! survives subscription downgrade/expiry).
 //!
-//! Self-contained: only depends on `scoutchain_scout_access` + `soroban_sdk`
+//! Self-contained: only depends on `promiscope_scout_access` + `soroban_sdk`
 //! (no cross-contract harness), matching the style of
 //! `check_precedence_property_tests.rs`.
 
-use scoutchain_scout_access::{
+use promiscope_scout_access::{
     EvidenceAccessGrant, FeeConfig, ScoutAccessContract, ScoutAccessContractClient,
     SubscriptionTier,
 };
@@ -483,7 +483,7 @@ fn admin_revoke_evidence_access_grant_not_found() {
         .expect("must be a contract error, not a host error");
     assert_eq!(
         err,
-        scoutchain_scout_access::ScoutAccessError::GrantNotFound
+        promiscope_scout_access::ScoutAccessError::GrantNotFound
     );
 }
 
@@ -623,7 +623,7 @@ fn revoke_evidence_access_by_player_revokes_grant() {
         .expect("must be a contract error, not a host error");
     assert_eq!(
         err,
-        scoutchain_scout_access::ScoutAccessError::PlayerNotVerified
+        promiscope_scout_access::ScoutAccessError::PlayerNotVerified
     );
 
     // Grant is untouched.
@@ -650,7 +650,7 @@ fn revoke_evidence_access_grant_not_found() {
         .expect("must be a contract error, not a host error");
     assert_eq!(
         err,
-        scoutchain_scout_access::ScoutAccessError::GrantNotFound
+        promiscope_scout_access::ScoutAccessError::GrantNotFound
     );
 }
 
@@ -676,6 +676,6 @@ fn revoke_evidence_access_already_revoked() {
         .expect("must be a contract error, not a host error");
     assert_eq!(
         err,
-        scoutchain_scout_access::ScoutAccessError::GrantAlreadyRevoked
+        promiscope_scout_access::ScoutAccessError::GrantAlreadyRevoked
     );
 }

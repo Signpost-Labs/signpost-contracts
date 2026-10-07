@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — deploy all contracts to Stellar testnet or mainnet
+# Promiscope — deploy all contracts to Stellar testnet or mainnet
 # Usage: ./scripts/deploy.sh [testnet|mainnet]
 set -euo pipefail
 
@@ -45,8 +45,8 @@ declare -A CONTRACT_IDS
 declare -A CONTRACT_WASM_HASHES
 
 for name in "${CONTRACTS[@]}"; do
-  wasm_name="scoutchain_${name}.wasm"
-  optimized="${WASM_DIR}/scoutchain_${name}.optimized.wasm"
+  wasm_name="promiscope_${name}.wasm"
+  optimized="${WASM_DIR}/promiscope_${name}.optimized.wasm"
 
   echo "==> Optimizing $name..."
   stellar contract optimize --wasm "${WASM_DIR}/${wasm_name}" --wasm-out "$optimized"

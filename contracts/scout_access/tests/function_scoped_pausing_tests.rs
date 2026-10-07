@@ -9,7 +9,7 @@
 //! - Interaction between whole-contract pause and function-scoped pause
 //! - health() reflecting the function-scoped pause state
 
-use scoutchain_scout_access::{
+use promiscope_scout_access::{
     FeeConfig, ScoutAccessContract, ScoutAccessContractClient, SubscriptionTier,
 };
 use soroban_sdk::{

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — verify cross-contract wiring after deployment or upgrade.
+# Promiscope — verify cross-contract wiring after deployment or upgrade.
 #
 # Sources .env.contracts, calls health() on every contract to confirm liveness,
 # then calls get_wiring_state() on every contract that exposes it (all four,
@@ -38,7 +38,7 @@
 # was written). Every pointer targets exactly one of the four contracts, and
 # every contract's `get_wiring_state()` now returns, for each pointer it
 # holds, both the stored `address` and a `epoch` (bump count incremented on
-# every successful set/update call — see scoutchain_shared_types::WiringLink).
+# every successful set/update call — see promiscope_shared_types::WiringLink).
 #
 # Pointers are grouped by the contract they target (not by which contract
 # holds them) because that is the natural "should agree" unit: e.g. all
@@ -245,7 +245,7 @@ prog = load(prog_ok, "PROG_STATE")
 sa = load(sa_ok, "SA_STATE")
 
 def nested_link(state, field):
-    # All four contracts now use the shared scoutchain_shared_types::WiringLink
+    # All four contracts now use the shared promiscope_shared_types::WiringLink
     # { address, epoch } shape. progress was migrated to this shape in issue
     # #1412 — the old flat_link helper is no longer needed.
     if state is None:

@@ -1,7 +1,7 @@
 //! Issue #1397: subsequent attest_milestone votes must match the round's
 //! description hash or be rejected with DescriptionMismatch.
 
-use scoutchain_verification::{
+use promiscope_verification::{
     AttestationStatus, VerificationContract, VerificationContractClient, VerificationError,
 };
 use soroban_sdk::{

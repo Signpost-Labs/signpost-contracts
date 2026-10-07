@@ -30,7 +30,7 @@ use soroban_sdk::{
     contract, contractimpl, contracttype, Address, Bytes, BytesN, Env, String, Symbol, Val, Vec,
 };
 
-use scoutchain_shared_types::{
+use promiscope_shared_types::{
     read_wiring_link, require_admin,
     safe_math::{safe_add_u32, safe_add_u64, safe_sub_u32},
     validate_cid, write_wiring_link, ProgressLevel,
@@ -92,7 +92,7 @@ const DEFAULT_REG_COOLDOWN_SECS: u64 = 0;
 
 /// Domain separator for off-chain milestone attestation messages.
 /// v2 — adds `expires_at` to the signed payload (issue #1381).
-const ATTESTATION_DOMAIN: &str = "ScoutChain-MilestoneAttestation-v2";
+const ATTESTATION_DOMAIN: &str = "Promiscope-MilestoneAttestation-v2";
 
 /// Maximum future offset (seconds) allowed for `expires_at` on an attestation.
 /// Prevents validators from signing payloads that remain valid for an
@@ -174,9 +174,9 @@ const ATTESTATION_VOTE_TTL_MARGIN_LEDGERS: u32 = 17_280;
 // `set_progress_contract` before `approve_milestone` can advance levels.
 mod progress_contract {
     soroban_sdk::contractimport!(
-        file = "fixtures/scoutchain_progress.wasm"
+        file = "fixtures/promiscope_progress.wasm"
     );
-    soroban_sdk::contractimport!(file = "fixtures/scoutchain_progress.wasm");
+    soroban_sdk::contractimport!(file = "fixtures/promiscope_progress.wasm");
 }
 
 // Types mirroring the registration contract's `get_player` return value,

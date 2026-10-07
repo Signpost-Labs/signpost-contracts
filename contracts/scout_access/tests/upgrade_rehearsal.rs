@@ -7,7 +7,7 @@
 //! different v2 artifact cannot be built in this toolchain-less sandbox, so the
 //! real `upgrade()` code path is driven with an empty-bytes WASM blob).
 //!
-//! Run: `cargo test -p scoutchain-scout-access --test upgrade_rehearsal`.
+//! Run: `cargo test -p promiscope-scout-access --test upgrade_rehearsal`.
 //!
 //! `scout_access` is the richest row-set in the DEPLOYMENT.md table:
 //!   * Persistent: subscription records, contact records and scout indexes.
@@ -19,7 +19,7 @@
 //! subscription after the upgrade only succeeds if the surviving instance-stored
 //! XLM token address and fee config are still usable.
 
-use scoutchain_scout_access::{
+use promiscope_scout_access::{
     FeeConfig, ScoutAccessContract, ScoutAccessContractClient, SubscriptionTier,
 };
 use soroban_sdk::{

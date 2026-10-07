@@ -1,5 +1,5 @@
 [package]
-name = "scoutchain-chaos-tests"
+name = "promiscope-chaos-tests"
 version.workspace = true
 edition.workspace = true
 # fixtures.rs / invariants.rs / schedule.rs are modules of chaos_schedules.rs,
@@ -15,11 +15,11 @@ path = "tests/chaos_schedules.rs"
 
 [dependencies]
 soroban-sdk = { workspace = true }
-scoutchain-registration = { path = "../registration" }
-scoutchain-verification = { path = "../verification" }
-scoutchain-progress = { path = "../progress" }
-scoutchain-scout-access = { path = "../scout_access" }
-scoutchain-shared-types = { path = "../shared-types" }
+promiscope-registration = { path = "../registration" }
+promiscope-verification = { path = "../verification" }
+promiscope-progress = { path = "../progress" }
+promiscope-scout-access = { path = "../scout_access" }
+promiscope-shared-types = { path = "../shared-types" }
 
 [dev-dependencies]
 soroban-sdk = { workspace = true, features = ["testutils"] }

@@ -1,6 +1,6 @@
 use soroban_sdk::{contracttype, Address, BytesN};
 
-pub use scoutchain_shared_types::{ProgressLevel, WiringLink};
+pub use promiscope_shared_types::{ProgressLevel, WiringLink};
 
 /// One step of a Merkle inclusion proof for [`ProgressEntry`] history
 /// commitments (see [`DataKey::HistoryRoot`]).
@@ -64,7 +64,7 @@ pub struct FrontierPeak {
 /// Snapshot of all cross-contract peer addresses held by the progress
 /// contract. Returned by [`ProgressContract::get_wiring_state`].
 ///
-/// Each field is a [`WiringLink`] (from `scoutchain_shared_types`), matching
+/// Each field is a [`WiringLink`] (from `promiscope_shared_types`), matching
 /// the pattern used by `registration`, `verification`, and `scout_access`.
 /// This replaces the previous flat representation (issue #1412) where each
 /// peer was split into separate `*_contract: Option<Address>` and `*_epoch:
@@ -190,7 +190,7 @@ pub enum DataKey {
     MigrationWindowSealed,
     /// Re-wiring epoch for [`DataKey::RegistrationContract`], bumped by
     /// every `set_registration_contract` call. See
-    /// `scoutchain_shared_types::WiringLink` and
+    /// `promiscope_shared_types::WiringLink` and
     /// `docs/WIRING_REGISTRY_DESIGN.md` (issue #1041).
     RegistrationContractEpoch,
     /// Re-wiring epoch for [`DataKey::VerificationContract`], bumped by

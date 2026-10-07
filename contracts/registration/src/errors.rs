@@ -1,11 +1,11 @@
-use scoutchain_shared_types::AdminError;
+use promiscope_shared_types::AdminError;
 use soroban_sdk::contracterror;
 
 /// Append-only: do not renumber existing variants. See docs/CONTRIBUTING.md.
 #[contracterror]
 #[derive(Copy, Clone, Debug, PartialEq)]
 #[repr(u32)]
-pub enum ScoutChainError {
+pub enum PromiscopeError {
     // ── Initialization & lifecycle ──
     /// `initialize` called more than once.
     AlreadyInitialized = 1,
@@ -66,9 +66,9 @@ pub enum ScoutChainError {
     InvalidCooldown = 19,
 }
 
-impl AdminError for ScoutChainError {
+impl AdminError for PromiscopeError {
     fn not_initialized() -> Self {
-        ScoutChainError::NotInitialized
+        PromiscopeError::NotInitialized
     }
 }
 
@@ -100,24 +100,24 @@ mod tests {
 
     #[test]
     fn scout_chain_error_discriminants_are_stable() {
-        assert_eq!(ScoutChainError::AlreadyInitialized as u32, 1);
-        assert_eq!(ScoutChainError::NotInitialized as u32, 2);
-        assert_eq!(ScoutChainError::PlayerNotFound as u32, 3);
-        assert_eq!(ScoutChainError::ValidatorNotAuthorized as u32, 4);
-        assert_eq!(ScoutChainError::InvalidProgressTransition as u32, 5);
-        assert_eq!(ScoutChainError::ScoutNotSubscribed as u32, 6);
-        assert_eq!(ScoutChainError::InsufficientFee as u32, 7);
-        assert_eq!(ScoutChainError::AlreadyRegistered as u32, 8);
-        assert_eq!(ScoutChainError::ContractPaused as u32, 9);
-        assert_eq!(ScoutChainError::Unauthorized as u32, 10);
-        assert_eq!(ScoutChainError::Overflow as u32, 11);
-        assert_eq!(ScoutChainError::ScoutNotFound as u32, 12);
-        assert_eq!(ScoutChainError::InvalidInput as u32, 13);
-        assert_eq!(ScoutChainError::PendingAdminNotSet as u32, 14);
-        assert_eq!(ScoutChainError::PlayerCapReached as u32, 15);
-        assert_eq!(ScoutChainError::RegistrationCooldown as u32, 16);
-        assert_eq!(ScoutChainError::PlayerRecordEvicted as u32, 17);
-        assert_eq!(ScoutChainError::ScoutRecordEvicted as u32, 18);
+        assert_eq!(PromiscopeError::AlreadyInitialized as u32, 1);
+        assert_eq!(PromiscopeError::NotInitialized as u32, 2);
+        assert_eq!(PromiscopeError::PlayerNotFound as u32, 3);
+        assert_eq!(PromiscopeError::ValidatorNotAuthorized as u32, 4);
+        assert_eq!(PromiscopeError::InvalidProgressTransition as u32, 5);
+        assert_eq!(PromiscopeError::ScoutNotSubscribed as u32, 6);
+        assert_eq!(PromiscopeError::InsufficientFee as u32, 7);
+        assert_eq!(PromiscopeError::AlreadyRegistered as u32, 8);
+        assert_eq!(PromiscopeError::ContractPaused as u32, 9);
+        assert_eq!(PromiscopeError::Unauthorized as u32, 10);
+        assert_eq!(PromiscopeError::Overflow as u32, 11);
+        assert_eq!(PromiscopeError::ScoutNotFound as u32, 12);
+        assert_eq!(PromiscopeError::InvalidInput as u32, 13);
+        assert_eq!(PromiscopeError::PendingAdminNotSet as u32, 14);
+        assert_eq!(PromiscopeError::PlayerCapReached as u32, 15);
+        assert_eq!(PromiscopeError::RegistrationCooldown as u32, 16);
+        assert_eq!(PromiscopeError::PlayerRecordEvicted as u32, 17);
+        assert_eq!(PromiscopeError::ScoutRecordEvicted as u32, 18);
     }
 
     /// The two variants this file previously conflated.
@@ -137,11 +137,11 @@ mod tests {
     /// existing client sees. That is what these assertions exist for.
     #[test]
     fn player_cap_and_cooldown_are_distinguishable() {
-        assert_eq!(ScoutChainError::PlayerCapReached as u32, 15);
-        assert_eq!(ScoutChainError::RegistrationCooldown as u32, 16);
+        assert_eq!(PromiscopeError::PlayerCapReached as u32, 15);
+        assert_eq!(PromiscopeError::RegistrationCooldown as u32, 16);
         assert_ne!(
-            ScoutChainError::PlayerCapReached as u32,
-            ScoutChainError::RegistrationCooldown as u32
+            PromiscopeError::PlayerCapReached as u32,
+            PromiscopeError::RegistrationCooldown as u32
         );
     }
 
@@ -154,7 +154,7 @@ mod tests {
         for raw_line in include_str!("errors.rs").lines() {
             let line = raw_line.trim();
 
-            if line.starts_with("pub enum ScoutChainError") {
+            if line.starts_with("pub enum PromiscopeError") {
                 in_error_enum = true;
                 continue;
             }
@@ -178,15 +178,15 @@ mod tests {
             let (variant, discriminant) = line
                 .trim_end_matches(',')
                 .split_once('=')
-                .expect("ScoutChainError variants must use explicit discriminants");
+                .expect("PromiscopeError variants must use explicit discriminants");
             let assigned_code = discriminant
                 .trim()
                 .parse::<u32>()
-                .expect("ScoutChainError discriminants must be u32 literals");
+                .expect("PromiscopeError discriminants must be u32 literals");
             let (expected_variant, expected_code) = EXPECTED_ERROR_CODES
                 .get(expected_index)
                 .copied()
-                .expect("ScoutChainError has an unpinned variant");
+                .expect("PromiscopeError has an unpinned variant");
 
             assert_eq!(variant.trim(), expected_variant);
             assert_eq!(assigned_code, expected_code);
@@ -194,11 +194,11 @@ mod tests {
             let code_index = assigned_code as usize;
             assert!(
                 code_index < seen_codes.len(),
-                "ScoutChainError code {assigned_code} exceeds the test range"
+                "PromiscopeError code {assigned_code} exceeds the test range"
             );
             assert!(
                 !seen_codes[code_index],
-                "ScoutChainError code {assigned_code} is assigned more than once"
+                "PromiscopeError code {assigned_code} is assigned more than once"
             );
             seen_codes[code_index] = true;
             expected_index += 1;
@@ -207,7 +207,7 @@ mod tests {
         assert_eq!(
             expected_index,
             EXPECTED_ERROR_CODES.len(),
-            "ScoutChainError is missing a pinned variant"
+            "PromiscopeError is missing a pinned variant"
         );
     }
 }

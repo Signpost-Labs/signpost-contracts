@@ -1,4 +1,4 @@
-pub use scoutchain_shared_types::{ContractHealth, WiringLink};
+pub use promiscope_shared_types::{ContractHealth, WiringLink};
 use soroban_sdk::{contracttype, Address, BytesN, String, Vec};
 
 /// Convenience aggregate returned by `get_validator_activity_report`.
@@ -35,20 +35,20 @@ pub struct ValidatorActivityReport {
 // Cross-contract view types (issue #1455)
 // Rather than duplicating PlayerVitals/PlayerProfile as local mirror types
 // (which silently drift when registration fields change), we re-export the
-// single authoritative definitions from scoutchain-shared-types.
+// single authoritative definitions from promiscope-shared-types.
 // Previously these were local mirror types named RegPlayerVitals /
 // RegPlayerProfile (referenced in issue #1014). They are now type aliases
 // pointing to the shared source of truth so a field rename in shared-types
 // produces a compile error here too.
 // ---------------------------------------------------------------------------
 
-/// Cross-contract view of player vitals, re-exported from scoutchain-shared-types.
+/// Cross-contract view of player vitals, re-exported from promiscope-shared-types.
 /// Use this when decoding registration.get_player results in verification logic.
-pub use scoutchain_shared_types::PlayerVitals as RegPlayerVitals;
+pub use promiscope_shared_types::PlayerVitals as RegPlayerVitals;
 
-/// Cross-contract view of a full player profile, re-exported from scoutchain-shared-types.
+/// Cross-contract view of a full player profile, re-exported from promiscope-shared-types.
 /// Use this when decoding registration.get_player results in verification logic.
-pub use scoutchain_shared_types::PlayerProfile as RegPlayerProfile;
+pub use promiscope_shared_types::PlayerProfile as RegPlayerProfile;
 
 /// Richer validator status — distinguishes unregistered from revoked.
 #[contracttype]
@@ -544,7 +544,7 @@ pub enum DataKey {
     // ── Wiring epochs (issue #1041) ──
     /// Re-wiring epoch for `DataKey::ProgressContract`, bumped by every
     /// `set_progress_contract` / `update_progress_contract` call. See
-    /// `scoutchain_shared_types::WiringLink` and
+    /// `promiscope_shared_types::WiringLink` and
     /// `docs/WIRING_REGISTRY_DESIGN.md`.
     ProgressContractEpoch,
     /// Re-wiring epoch for `DataKey::RegistrationContract`, bumped by every
@@ -593,7 +593,7 @@ pub enum DataKey {
 /// Returned by [`VerificationContract::get_wiring_state`].
 ///
 /// See `docs/WIRING_REGISTRY_DESIGN.md` for the full cross-contract picture
-/// and `scoutchain_shared_types::WiringLink` for what `epoch` means.
+/// and `promiscope_shared_types::WiringLink` for what `epoch` means.
 #[contracttype]
 #[derive(Clone, Debug, PartialEq)]
 pub struct VerificationWiringState {

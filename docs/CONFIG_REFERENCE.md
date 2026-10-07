@@ -1,4 +1,4 @@
-# ScoutChain — Configuration Reference
+# Promiscope — Configuration Reference
 
 All environment variables consumed anywhere in this repository are listed below,
 grouped by component. Copy `.env.example` to `.env` and fill in every **Required**

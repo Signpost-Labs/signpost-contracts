@@ -4,12 +4,12 @@
  * Requires a live Soroban RPC endpoint and a pre-registered player — standing
  * up a full `register_player` + funded-signer flow is out of scope for this
  * reference example. Port this test alongside `updateProfile()` into
- * `scoutchain-backend`, where that fixture setup already exists.
+ * `promiscope-backend`, where that fixture setup already exists.
  *
  * Skips automatically unless all of the following are set:
  *   INTEGRATION_RPC_URL    e.g. https://soroban-testnet.stellar.org
  *   INTEGRATION_NETWORK    "testnet" | "mainnet" (must match the `networks` key
- *                          exported by @scoutchain/bindings-registration)
+ *                          exported by @promiscope/bindings-registration)
  *   INTEGRATION_SECRET     secret key (S...) of an already-registered player's wallet
  *   INTEGRATION_PLAYER_ID  that wallet's on-chain player_id
  *
@@ -22,7 +22,7 @@
  */
 import { describe, it, expect } from "vitest";
 import { Keypair, TransactionBuilder } from "@stellar/stellar-base";
-import { Client as RegistrationClient, networks } from "@scoutchain/bindings-registration";
+import { Client as RegistrationClient, networks } from "@promiscope/bindings-registration";
 import { updateProfile } from "./updateProfile";
 
 const { INTEGRATION_RPC_URL, INTEGRATION_NETWORK, INTEGRATION_SECRET, INTEGRATION_PLAYER_ID } =

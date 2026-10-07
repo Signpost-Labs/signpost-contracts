@@ -7,7 +7,7 @@
 //! | ForCause → Routine | ValidatorAlreadyRevoked (downgrade) |
 //! | Routine → ForCause | allowed; preserves original revoked_at; starts cascade |
 
-use scoutchain_verification::{
+use promiscope_verification::{
     RevocationSeverity, VerificationContract, VerificationContractClient, VerificationError,
 };
 use soroban_sdk::{

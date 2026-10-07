@@ -1,4 +1,4 @@
-# ScoutChain — TypeScript Contract Bindings
+# Promiscope — TypeScript Contract Bindings
 
 > **These are generated artifacts.** The `src/` directory and compiled `dist/`
 > output inside each binding package are produced by
@@ -101,35 +101,35 @@ Install from the local path:
 
 ```bash
 # from your backend or frontend repo root
-npm install file:../scout-off-contracts/bindings/registration
-npm install file:../scout-off-contracts/bindings/verification
-npm install file:../scout-off-contracts/bindings/progress
-npm install file:../scout-off-contracts/bindings/scout_access
+npm install file:../promiscope-contracts/bindings/registration
+npm install file:../promiscope-contracts/bindings/verification
+npm install file:../promiscope-contracts/bindings/progress
+npm install file:../promiscope-contracts/bindings/scout_access
 ```
 
 Or publish to a private npm registry and install by name:
 
 ```bash
-npm install @scoutchain/bindings-registration
-npm install @scoutchain/bindings-verification
-npm install @scoutchain/bindings-progress
-npm install @scoutchain/bindings-scout-access
+npm install @promiscope/bindings-registration
+npm install @promiscope/bindings-verification
+npm install @promiscope/bindings-progress
+npm install @promiscope/bindings-scout-access
 ```
 
 Then import in your code:
 
 ```typescript
-import { Client as RegistrationClient } from "@scoutchain/bindings-registration";
-import { Client as VerificationClient } from "@scoutchain/bindings-verification";
-import { Client as ProgressClient }     from "@scoutchain/bindings-progress";
-import { Client as ScoutAccessClient }  from "@scoutchain/bindings-scout-access";
+import { Client as RegistrationClient } from "@promiscope/bindings-registration";
+import { Client as VerificationClient } from "@promiscope/bindings-verification";
+import { Client as ProgressClient }     from "@promiscope/bindings-progress";
+import { Client as ScoutAccessClient }  from "@promiscope/bindings-scout-access";
 ```
 
 Instantiate with your RPC URL and the network constants exported by each
 package:
 
 ```typescript
-import * as Registration from "@scoutchain/bindings-registration";
+import * as Registration from "@promiscope/bindings-registration";
 
 const client = new Registration.Client({
   ...Registration.networks.testnet, // includes contractId and networkPassphrase

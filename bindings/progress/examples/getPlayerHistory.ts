@@ -2,8 +2,8 @@
  * Reference implementation for `getPlayerHistory()`.
  *
  * Reads a player's current progress level and their full level-advancement
- * history from the ScoutChain progress contract via the generated
- * `@scoutchain/bindings-progress` client.
+ * history from the Promiscope progress contract via the generated
+ * `@promiscope/bindings-progress` client.
  *
  * The progress contract's write path (`advance_level`) is cross-contract only
  * — it is called exclusively by the verification contract when a validator
@@ -29,7 +29,7 @@
  * handles both the `Ok<T>|Err<E>` union and the auto-thrown codegen shape —
  * verify against your generated `src/index.ts` and adjust if needed.
  */
-import { Client as ProgressClient, networks } from "@scoutchain/bindings-progress";
+import { Client as ProgressClient, networks } from "@promiscope/bindings-progress";
 
 export interface GetPlayerHistoryParams {
   playerId: bigint;

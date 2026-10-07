@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Migrate legacy region and position values in ScoutChain database / records
+Migrate legacy region and position values in Promiscope database / records
 to canonical normalized formats (trimmed, uppercase).
 
 Usage:
@@ -19,5 +19,5 @@ def migrate_position(val: str) -> str:
     return val.strip().upper()
 
 if __name__ == "__main__":
-    print("ScoutChain region & position normalization migration helper.")
+    print("Promiscope region & position normalization migration helper.")
     print("Legacy values are trimmed and converted to uppercase canonical form.")

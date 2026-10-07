@@ -17,9 +17,9 @@
 //! calibrated from real CI measurements with 20% headroom (see
 //! `cpu-cost-budget-report.txt`).
 
-use scoutchain_progress::{ProgressContract, ProgressContractClient};
-use scoutchain_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
-use scoutchain_shared_types::ProgressLevel;
+use promiscope_progress::{ProgressContract, ProgressContractClient};
+use promiscope_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
+use promiscope_shared_types::ProgressLevel;
 use soroban_sdk::{testutils::Address as _, Address, Env, String, Vec};
 
 const ADVANCE_LEVEL_CPU_BUDGET: u64 = 600_000;

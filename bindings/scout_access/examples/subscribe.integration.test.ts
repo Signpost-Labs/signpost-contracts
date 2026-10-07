@@ -6,13 +6,13 @@
  * to cover the subscription fee, and a pre-registered player to contact.
  * Standing up the full `initialize` + funded-signer + XLM-transfer fixture
  * is out of scope for this reference example. Port this test alongside
- * `subscribeScout()` / `payToContact()` into `scoutchain-backend`, where that
+ * `subscribeScout()` / `payToContact()` into `promiscope-backend`, where that
  * fixture setup already exists.
  *
  * Skips automatically unless all of the following are set:
  *   INTEGRATION_RPC_URL    e.g. https://soroban-testnet.stellar.org
  *   INTEGRATION_NETWORK    "testnet" | "mainnet" (must match the `networks` key
- *                          exported by @scoutchain/bindings-scout-access)
+ *                          exported by @promiscope/bindings-scout-access)
  *   INTEGRATION_SECRET     secret key (S...) of a funded scout wallet
  *   INTEGRATION_TIER       "Basic" | "Pro" | "Elite" — tier to subscribe at
  *   INTEGRATION_PLAYER_ID  numeric player_id of an existing active player
@@ -36,7 +36,7 @@ import { Keypair, TransactionBuilder } from "@stellar/stellar-base";
 import {
   Client as ScoutAccessClient,
   networks,
-} from "@scoutchain/bindings-scout-access";
+} from "@promiscope/bindings-scout-access";
 import { subscribeScout, payToContact } from "./subscribe";
 
 const {

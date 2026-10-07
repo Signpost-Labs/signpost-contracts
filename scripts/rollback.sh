@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# ScoutChain — rollback to the last known good contract addresses
+# Promiscope — rollback to the last known good contract addresses
 # Restores .env.contracts from the snapshot saved by deploy.sh before the last deployment.
 # Usage: ./scripts/rollback.sh [testnet|mainnet|local]
 set -euo pipefail

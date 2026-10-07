@@ -1,4 +1,4 @@
-# ScoutChain Glossary
+# Promiscope Glossary
 
 Domain-specific terms used throughout the contracts, documentation, and SDKs.
 Each definition includes a role description and links to the relevant contract

@@ -1,7 +1,7 @@
 //! Issue #1396: dispute rounds (re-dispute after cooldown) + open-dispute cap.
 
-use scoutchain_shared_types::ProgressLevel;
-use scoutchain_verification::{
+use promiscope_shared_types::ProgressLevel;
+use promiscope_verification::{
     RegPlayerProfile, RegPlayerVitals, VerificationContract, VerificationContractClient,
     VerificationError,
 };

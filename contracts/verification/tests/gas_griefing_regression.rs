@@ -5,7 +5,7 @@
 //!
 //! See docs/GAS_GRIEFING_AUDIT.md — Vector 1: ValidatorVector Monotonic Growth.
 
-use scoutchain_verification::{
+use promiscope_verification::{
     RevocationSeverity, VerificationContract, VerificationContractClient,
 };
 use soroban_sdk::{testutils::Address as _, Address, Env, String};
@@ -62,7 +62,7 @@ fn test_validator_cap_enforced_at_100() {
         matches!(
             result,
             Err(Ok(
-                scoutchain_verification::VerificationError::ValidatorCapReached
+                promiscope_verification::VerificationError::ValidatorCapReached
             ))
         ),
         "101st validator registration must return ValidatorCapReached: {result:?}"

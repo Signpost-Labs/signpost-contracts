@@ -1,4 +1,4 @@
--- ScoutChain — align players column sizes with on-chain contract limits
+-- Promiscope — align players column sizes with on-chain contract limits
 --
 -- Context:
 --   The registration contract enforces:

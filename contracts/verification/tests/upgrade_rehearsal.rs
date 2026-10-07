@@ -8,7 +8,7 @@
 //! real `upgrade()` code path is driven with an empty-bytes WASM blob — the same
 //! mechanism the contract's own inline upgrade test uses).
 //!
-//! Run: `cargo test -p scoutchain-verification --test upgrade_rehearsal`.
+//! Run: `cargo test -p promiscope-verification --test upgrade_rehearsal`.
 //!
 //! ## Contract-specific quirk exercised here
 //!
@@ -22,7 +22,7 @@
 //! deliberately-broken test proves an operator who reaches for
 //! `set_progress_contract` is caught.
 
-use scoutchain_verification::{VerificationContract, VerificationContractClient};
+use promiscope_verification::{VerificationContract, VerificationContractClient};
 use soroban_sdk::{
     testutils::{Address as _, Ledger},
     Address, Bytes, Env, String,

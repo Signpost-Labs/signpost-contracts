@@ -4,8 +4,8 @@
 //! the same error code (`ProContactLimitReached` = 20) when the Pro-tier
 //! monthly contact limit is exceeded.
 
-use scoutchain_scout_access::{FeeConfig, ScoutAccessContractClient, SubscriptionTier};
-use scoutchain_verification::VerificationContractClient;
+use promiscope_scout_access::{FeeConfig, ScoutAccessContractClient, SubscriptionTier};
+use promiscope_verification::VerificationContractClient;
 use soroban_sdk::{testutils::Address as _, token::StellarAssetClient, Address, Env};
 
 const CONTACT_FEE: i128 = 100_000;
@@ -34,13 +34,13 @@ fn setup() -> (
     let env = Env::default();
     env.mock_all_auths();
 
-    let verification_id = env.register(scoutchain_verification::VerificationContract, ());
+    let verification_id = env.register(promiscope_verification::VerificationContract, ());
     let verification_client =
-        scoutchain_verification::VerificationContractClient::new(&env, &verification_id);
+        promiscope_verification::VerificationContractClient::new(&env, &verification_id);
 
-    let scout_access_id = env.register(scoutchain_scout_access::ScoutAccessContract, ());
+    let scout_access_id = env.register(promiscope_scout_access::ScoutAccessContract, ());
     let scout_access_client =
-        scoutchain_scout_access::ScoutAccessContractClient::new(&env, &scout_access_id);
+        promiscope_scout_access::ScoutAccessContractClient::new(&env, &scout_access_id);
 
     let admin = Address::generate(&env);
     let scout = Address::generate(&env);
@@ -78,7 +78,7 @@ fn test_pay_to_contact_and_batch_contact_players_return_same_quota_error() {
     );
 
     let result_pay_third = scout_access.try_pay_to_contact(&scout, &3u64);
-    let expected_error = scoutchain_scout_access::ScoutAccessError::ProContactLimitReached;
+    let expected_error = promiscope_scout_access::ScoutAccessError::ProContactLimitReached;
     assert_eq!(
         result_pay_third,
         Err(Ok(expected_error)),
@@ -103,7 +103,7 @@ fn test_batch_contact_players_pro_quota_exceeded_returns_pro_contact_limit_reach
     let player_ids = soroban_sdk::Vec::from_slice(&env, &[1u64, 2u64, 3u64]);
 
     let result = scout_access.try_batch_contact_players(&scout, &player_ids);
-    let expected_error = scoutchain_scout_access::ScoutAccessError::ProContactLimitReached;
+    let expected_error = promiscope_scout_access::ScoutAccessError::ProContactLimitReached;
     assert_eq!(
         result,
         Err(Ok(expected_error)),
@@ -113,7 +113,7 @@ fn test_batch_contact_players_pro_quota_exceeded_returns_pro_contact_limit_reach
 
 #[test]
 fn test_contact_quota_exceeded_code_18_is_deprecated() {
-    use scoutchain_scout_access::ScoutAccessError;
+    use promiscope_scout_access::ScoutAccessError;
     assert_eq!(ScoutAccessError::ContactQuotaExceeded as u32, 18);
     assert_eq!(ScoutAccessError::ProContactLimitReached as u32, 20);
     assert_ne!(

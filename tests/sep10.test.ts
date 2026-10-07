@@ -34,8 +34,8 @@ const mockedPrisma = prisma as unknown as Record<string, Record<string, jest.Moc
 beforeAll(() => {
   process.env.SEP10_SIGNING_SECRET =
     "SABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890AB";
-  process.env.HOME_DOMAIN = "scoutchain.com";
-  process.env.WEB_AUTH_DOMAIN = "app.scoutchain.com";
+  process.env.HOME_DOMAIN = "promiscope.example";
+  process.env.WEB_AUTH_DOMAIN = "app.promiscope.example";
   process.env.JWT_SECRET = "test-jwt-secret";
   process.env.STELLAR_NETWORK = "testnet";
 });

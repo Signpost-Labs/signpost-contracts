@@ -11,7 +11,7 @@
 //!    exactly once in insertion order.
 //! 5. A validator with no approvals returns `total = 0`.
 
-use scoutchain_verification::{MilestoneRef, VerificationContract, VerificationContractClient};
+use promiscope_verification::{MilestoneRef, VerificationContract, VerificationContractClient};
 use soroban_sdk::{testutils::Address as _, Address, Env, String, Vec};
 
 // ── helpers ──────────────────────────────────────────────────────────────────

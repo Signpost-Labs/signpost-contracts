@@ -19,10 +19,10 @@
 //!
 //! Run them with:
 //! ```text
-//! cargo test -p scoutchain-registration  --test upgrade_rehearsal
-//! cargo test -p scoutchain-verification  --test upgrade_rehearsal
-//! cargo test -p scoutchain-progress      --test upgrade_rehearsal
-//! cargo test -p scoutchain-scout-access  --test upgrade_rehearsal
+//! cargo test -p promiscope-registration  --test upgrade_rehearsal
+//! cargo test -p promiscope-verification  --test upgrade_rehearsal
+//! cargo test -p promiscope-progress      --test upgrade_rehearsal
+//! cargo test -p promiscope-scout-access  --test upgrade_rehearsal
 //! # or the whole set:
 //! cargo test --workspace --test upgrade_rehearsal
 //! ```
@@ -62,9 +62,9 @@
 //! (live cross-contract level resolution, admin-gated calls) rather than raw
 //! storage pokes, so they stay meaningful against a real v2 binary too.
 
-use scoutchain_progress::{ProgressContract, ProgressContractClient};
-use scoutchain_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
-use scoutchain_shared_types::ProgressLevel;
+use promiscope_progress::{ProgressContract, ProgressContractClient};
+use promiscope_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
+use promiscope_shared_types::ProgressLevel;
 use soroban_sdk::{
     testutils::{Address as _, Ledger},
     vec, Address, Bytes, Env, String,

@@ -35,7 +35,7 @@
 //!   entry — isolating the global-index write cost from the (legitimate but
 //!   separate) O(n) growth of per-validator milestone history.
 
-use scoutchain_verification::{
+use promiscope_verification::{
     GlobalMilestoneEntry, VerificationContract, VerificationContractClient,
 };
 use soroban_sdk::{testutils::Address as _, Address, Env, String, Vec};

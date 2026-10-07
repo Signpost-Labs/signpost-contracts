@@ -1,4 +1,4 @@
-use scoutchain_shared_types::ProgressLevel;
+use promiscope_shared_types::ProgressLevel;
 
 use crate::fixtures::Harness;
 
@@ -183,7 +183,7 @@ pub fn assert_validator_consistency(harness: &Harness) -> Result<(), String> {
     for i in 0..harness.validators.len() {
         let validator = harness.validators.get(i).unwrap();
         let status = harness.verification.get_validator_status(&validator);
-        if status == scoutchain_verification::ValidatorStatus::NotRegistered {
+        if status == promiscope_verification::ValidatorStatus::NotRegistered {
             return Err(format!("Validator {:?} not registered", validator));
         }
     }

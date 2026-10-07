@@ -1,14 +1,14 @@
 /**
  * Reference implementation for `subscribeScout()` and `payToContact()`.
  *
- * The production scout onboarding flow consumed by ScoutChain clients lives in
- * the separate `scoutchain-backend` repo (see `../../../ai.md` and
+ * The production scout onboarding flow consumed by Promiscope clients lives in
+ * the separate `promiscope-backend` repo (see `../../../ai.md` and
  * `../../../README.md` — "Backend and frontend repos"). This file is the
  * pattern to port into that backend (or a frontend wallet integration) to make
  * subscription purchases and contact-unlock transactions submit real on-chain
  * state rather than stubs.
  *
- * This file is not imported anywhere in `scout-off-contracts` — it is a
+ * This file is not imported anywhere in `promiscope-contracts` — it is a
  * reference implementation only. It covers the two-step scout onboarding flow
  * documented in the scout_access README:
  *
@@ -43,7 +43,7 @@
  * defensively checks for both shapes — verify against your generated
  * `src/index.ts` and adjust if a newer codegen version changes that convention.
  */
-import { Client as ScoutAccessClient, networks } from "@scoutchain/bindings-scout-access";
+import { Client as ScoutAccessClient, networks } from "@promiscope/bindings-scout-access";
 import type { SignTransaction } from "@stellar/stellar-sdk/contract";
 
 // ---------------------------------------------------------------------------

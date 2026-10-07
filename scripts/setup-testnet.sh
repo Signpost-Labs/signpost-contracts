@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# ScoutChain — full testnet setup in one command
+# Promiscope — full testnet setup in one command
 # Runs: build → deploy → initialize → generate-bindings → seed
 set -euo pipefail
 
 echo "========================================"
-echo "  ScoutChain Testnet Setup"
+echo "  Promiscope Testnet Setup"
 echo "========================================"
 
 if [[ ! -f .env ]]; then

@@ -1,7 +1,7 @@
 # `approveMilestone()` reference implementation
 
 Not generated, not built, not published — these two files exist purely as a
-reference for the `scoutchain-backend` team and any frontend integrators
+reference for the `promiscope-backend` team and any frontend integrators
 building validator tooling.
 
 ## Why this exists
@@ -17,7 +17,7 @@ This directory documents the exact TypeScript call pattern for that flow.
 
 - `approveMilestone.ts` — builds and submits a real
   `approve_milestone(validator_wallet, player_id, description, evidence_hash)`
-  Soroban transaction via `@scoutchain/bindings-verification`'s generated
+  Soroban transaction via `@promiscope/bindings-verification`'s generated
   `Client`, and returns the 1-indexed milestone index the contract assigned
   (`Result<u32, VerificationError>`) together with the Soroban transaction hash.
   Throws on RPC/simulation failure, on contract-level rejection (e.g.
@@ -49,7 +49,7 @@ valid IPFS (`Qm…`) or Arweave (`bafy…`) CID, already uploaded, and must be
 unique per test run — the contract rejects `DuplicateEvidence`. Append a
 timestamp or use a different CID for each run.
 
-## Porting this into `scoutchain-backend`
+## Porting this into `promiscope-backend`
 
 1. Copy `approveMilestone.ts`'s logic into wherever the backend's validator
    approval endpoint currently stubs or fires a transaction.

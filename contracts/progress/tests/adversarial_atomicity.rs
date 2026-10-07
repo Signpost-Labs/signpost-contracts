@@ -9,10 +9,10 @@
 //! same spirit as the `confirm_trial_offer` atomicity tests in
 //! `contracts/scout_access/tests/adversarial_atomicity.rs`.
 
-use scoutchain_progress::{ProgressContract, ProgressContractClient, ProgressError};
-use scoutchain_registration::{RegistrationContract, RegistrationContractClient};
-use scoutchain_shared_types::ProgressLevel;
-use scoutchain_verification::{VerificationContract, VerificationContractClient};
+use promiscope_progress::{ProgressContract, ProgressContractClient, ProgressError};
+use promiscope_registration::{RegistrationContract, RegistrationContractClient};
+use promiscope_shared_types::ProgressLevel;
+use promiscope_verification::{VerificationContract, VerificationContractClient};
 use soroban_sdk::{
     testutils::{Address as _, Ledger},
     Address, Env,

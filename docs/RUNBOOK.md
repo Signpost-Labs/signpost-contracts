@@ -1,6 +1,6 @@
-# ScoutChain Runbook
+# Promiscope Runbook
 
-Operational procedures for the ScoutChain platform.
+Operational procedures for the Promiscope platform.
 
 ---
 
@@ -164,7 +164,7 @@ For response-time expectations and incident-severity guidance, see
 [`SECURITY.md#emergency-response-immediate-mitigation`](../SECURITY.md#emergency-response-immediate-mitigation).
 
 This section assumes the multisig/timelock admin work tracked in
-[issue #609](https://github.com/scout-off/scout-off-contracts/issues/609)
+[issue #609](https://github.com/promiscope/promiscope-contracts/issues/609)
 has not shipped yet — once it has, this single-key failure mode mostly goes
 away, which is exactly why that issue should be prioritized (see "Prevention"
 below).
@@ -232,7 +232,7 @@ around it:
    possible** here — skip it and rely entirely on step 1 (public
    announcement) and client-side blocklisting for containment instead.
    Tooling to make this migration itself less manual is tracked in
-   [issue #617](https://github.com/scout-off/scout-off-contracts/issues/617);
+   [issue #617](https://github.com/promiscope/promiscope-contracts/issues/617);
    until that lands, follow the manual steps in `DEPLOYMENT.md` directly.
 4. **Replay state into the new contract** from the off-chain indexer's
    event log (DEPLOYMENT.md step 4), and audit that log for any
@@ -244,7 +244,7 @@ around it:
 Both scenarios exist only because each contract has exactly one admin
 key with no fallback. This is the strongest possible argument for
 prioritizing [issue #609 — multisig/timelock admin
-authorization](https://github.com/scout-off/scout-off-contracts/issues/609):
+authorization](https://github.com/promiscope/promiscope-contracts/issues/609):
 a threshold scheme turns "one lost or stolen key" into "an attacker or
 accident needs to compromise/lose a quorum of keys," and a timelock gives
 the team a window to react to a malicious pending action (e.g. a proposed
@@ -465,7 +465,7 @@ around it:
    possible** here — skip it and rely entirely on step 1 (public
    announcement) and client-side blocklisting for containment instead.
    Tooling to make this migration itself less manual is tracked in
-   [issue #617](https://github.com/scout-off/scout-off-contracts/issues/617);
+   [issue #617](https://github.com/promiscope/promiscope-contracts/issues/617);
    until that lands, follow the manual steps in `DEPLOYMENT.md` directly.
 4. **Replay state into the new contract** from the off-chain indexer's
    event log (DEPLOYMENT.md step 4), and audit that log for any
@@ -477,7 +477,7 @@ around it:
 Both scenarios exist only because each contract has exactly one admin
 key with no fallback. This is the strongest possible argument for
 prioritizing [issue #609 — multisig/timelock admin
-authorization](https://github.com/scout-off/scout-off-contracts/issues/609):
+authorization](https://github.com/promiscope/promiscope-contracts/issues/609):
 a threshold scheme turns "one lost or stolen key" into "an attacker or
 accident needs to compromise/lose a quorum of keys," and a timelock gives
 the team a window to react to a malicious pending action (e.g. a proposed
@@ -561,5 +561,5 @@ proceed until it is verified.
 - [DEPLOYMENT.md](DEPLOYMENT.md) — contract deployment order and initialization
 - [CONTRACT_REFERENCE.md](CONTRACT_REFERENCE.md) — full `pause_contract` / `unpause_contract` / `health` function reference
 - [GLOSSARY.md](GLOSSARY.md) — domain term definitions
-- [Issue #609](https://github.com/scout-off/scout-off-contracts/issues/609) — multisig/timelock admin authorization (the preventive fix for this section)
-- [Issue #617](https://github.com/scout-off/scout-off-contracts/issues/617) — tooling for the address-migration procedure this section relies on
+- [Issue #609](https://github.com/promiscope/promiscope-contracts/issues/609) — multisig/timelock admin authorization (the preventive fix for this section)
+- [Issue #617](https://github.com/promiscope/promiscope-contracts/issues/617) — tooling for the address-migration procedure this section relies on

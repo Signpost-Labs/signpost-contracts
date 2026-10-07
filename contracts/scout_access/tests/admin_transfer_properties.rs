@@ -6,7 +6,7 @@
 //! 3. Admin is immutable except via successful `accept_admin`.
 //! 4. A replaced proposal cannot be accepted by the old proposed address.
 
-use scoutchain_scout_access::{FeeConfig, ScoutAccessContract, ScoutAccessContractClient};
+use promiscope_scout_access::{FeeConfig, ScoutAccessContract, ScoutAccessContractClient};
 use soroban_sdk::testutils::{Address as _, MockAuth, MockAuthInvoke};
 use soroban_sdk::IntoVal;
 use soroban_sdk::{vec, Address, Env, Val, Vec};

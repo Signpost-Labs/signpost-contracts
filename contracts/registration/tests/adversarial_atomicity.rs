@@ -6,7 +6,7 @@
 //! partial state behind. These tests prove that a failed registration neither
 //! duplicates an existing player nor leaks a half-written profile.
 
-use scoutchain_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
+use promiscope_registration::{PlayerVitals, RegistrationContract, RegistrationContractClient};
 use soroban_sdk::{testutils::Address as _, Address, Env, String, Vec};
 
 struct Harness {

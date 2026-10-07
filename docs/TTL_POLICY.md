@@ -1,10 +1,10 @@
 # TTL (Time-To-Live) and Persistent Storage Archival Policy
 
-**Issue:** [#705](https://github.com/scout-off/scout-off-contracts/issues/705)
+**Issue:** [#705](https://github.com/promiscope/promiscope-contracts/issues/705)
 
 ## Overview
 
-This document defines the persistent storage TTL policy for the scout-off-contracts platform. It ensures that long-lived identity and status records (players, validators, scouts) cannot be silently archived due to inactivity periods that are normal for the platform's usage pattern.
+This document defines the persistent storage TTL policy for the promiscope-contracts platform. It ensures that long-lived identity and status records (players, validators, scouts) cannot be silently archived due to inactivity periods that are normal for the platform's usage pattern.
 
 **Key Principle:** A player building reputation over months, a validator registered but inactive during seasonal cycles, or a scout browsing asynchronously should not lose their identity or status records to state archival simply because no transaction touched that specific key for ~3 hours (the default Soroban persistent TTL of ~4096 ledgers at ~5 second average close time).
 

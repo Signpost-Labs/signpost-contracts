@@ -1,24 +1,24 @@
 /**
  * Reference implementation for `updateProfile()`.
  *
- * The production `updateProfile()` consumed by ScoutChain clients lives in the
- * separate `scoutchain-backend` repo (see `../../../ai.md` and
+ * The production `updateProfile()` consumed by Promiscope clients lives in the
+ * separate `promiscope-backend` repo (see `../../../ai.md` and
  * `../../../README.md` — "Backend and frontend repos"). As of writing, that
  * function returns `stub-update-txid-${playerId.slice(0, 8)}` without ever
  * touching the chain, so on-chain profile updates are silently dropped after
  * IPFS pinning.
  *
- * This file is not imported anywhere in `scout-off-contracts` — it is the
- * pattern to port into `scoutchain-backend` to close that gap. It builds and
+ * This file is not imported anywhere in `promiscope-contracts` — it is the
+ * pattern to port into `promiscope-backend` to close that gap. It builds and
  * submits a real `update_profile(player_id, ipfs_hashes)` Soroban transaction
- * via the generated `@scoutchain/bindings-registration` client and returns
+ * via the generated `@promiscope/bindings-registration` client and returns
  * the transaction hash Soroban RPC actually assigned to it
  * (`sendTransactionResponse.hash`), not a synthetic string.
  *
  * See `contracts/registration/src/lib.rs::update_profile` and
  * `docs/CONTRACT_REFERENCE.md` for the on-chain contract this wraps:
  *
- *   update_profile(player_id: u64, ipfs_hashes: Vec<String>) -> Result<(), ScoutChainError>
+ *   update_profile(player_id: u64, ipfs_hashes: Vec<String>) -> Result<(), PromiscopeError>
  *   Auth: the player's wallet must sign.
  *   Errors: PlayerNotFound, InvalidInput (empty or >10 hashes), ContractPaused
  *
@@ -29,7 +29,7 @@
  * checks for both shapes — verify against your generated `src/index.ts` and
  * adjust if a newer codegen version changes that convention.
  */
-import { Client as RegistrationClient, networks } from "@scoutchain/bindings-registration";
+import { Client as RegistrationClient, networks } from "@promiscope/bindings-registration";
 import type { SignTransaction } from "@stellar/stellar-sdk/contract";
 
 export interface UpdateProfileParams {
@@ -92,7 +92,7 @@ export async function updateProfile(params: UpdateProfileParams): Promise<Update
     );
   }
 
-  // `update_profile` returns Result<(), ScoutChainError> on the Rust side, so
+  // `update_profile` returns Result<(), PromiscopeError> on the Rust side, so
   // a successfully *submitted* transaction can still carry a contract-level
   // Err (e.g. PlayerNotFound) — check that separately from send/confirm
   // failures above.

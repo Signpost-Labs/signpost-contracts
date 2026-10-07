@@ -1,5 +1,5 @@
-use scoutchain_registration::PlayerVitals;
-use scoutchain_shared_types::ProgressLevel;
+use promiscope_registration::PlayerVitals;
+use promiscope_shared_types::ProgressLevel;
 use soroban_sdk::{testutils::Address as _, token::StellarAssetClient, Address, String, Vec};
 
 use crate::fixtures::{Harness, CONTACT_FEE};

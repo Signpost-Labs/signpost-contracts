@@ -2,7 +2,7 @@
 
 ## Semantic Versioning
 
-ScoutChain contracts follow [Semantic Versioning 2.0.0](https://semver.org/) — `MAJOR.MINOR.PATCH`:
+Promiscope contracts follow [Semantic Versioning 2.0.0](https://semver.org/) — `MAJOR.MINOR.PATCH`:
 
 | Component | Incremented when |
 |-----------|-----------------|
@@ -63,7 +63,7 @@ The upgrade procedure is implemented in `scripts/upgrade.sh` (see [DEPLOYMENT.md
 ```bash
 ./scripts/upgrade.sh <network> <contract_name> <new_wasm_path>
 # Example:
-./scripts/upgrade.sh testnet verification target/wasm32v1-none/release/scoutchain_verification.wasm
+./scripts/upgrade.sh testnet verification target/wasm32v1-none/release/promiscope_verification.wasm
 ```
 
 ### Pre-upgrade
@@ -73,10 +73,10 @@ The upgrade procedure is implemented in `scripts/upgrade.sh` (see [DEPLOYMENT.md
 - [ ] Check `version()` on all four contracts to confirm the baseline version before upgrade. Each contract should return the expected deployed workspace version (currently `2.0.0`, from `CARGO_PKG_VERSION`, with no `v` prefix).
 - [ ] Run `cargo test --workspace` against the new code locally
 - [ ] Rehearse the upgrade locally with the storage-survival harness — **no testnet fees required.** For each contract it deploys v1, seeds representative state, calls `upgrade()`, and asserts every row of the "What survives an upgrade" table in `docs/DEPLOYMENT.md` (persistent state unchanged; instance `Initialized`/`Paused` flags intact; cross-contract links re-wirable), including the `verification` `AlreadyConfigured` re-wire quirk. Run:
-  - `cargo test -p scoutchain-registration  --test upgrade_rehearsal`
-  - `cargo test -p scoutchain-verification  --test upgrade_rehearsal`
-  - `cargo test -p scoutchain-progress      --test upgrade_rehearsal`
-  - `cargo test -p scoutchain-scout-access  --test upgrade_rehearsal`
+  - `cargo test -p promiscope-registration  --test upgrade_rehearsal`
+  - `cargo test -p promiscope-verification  --test upgrade_rehearsal`
+  - `cargo test -p promiscope-progress      --test upgrade_rehearsal`
+  - `cargo test -p promiscope-scout-access  --test upgrade_rehearsal`
   - (or all at once: `cargo test --workspace --test upgrade_rehearsal`)
 - [ ] Test the full upgrade flow on testnet before touching mainnet (only after the local rehearsal above passes, so testnet transaction fees are spent on a flow you already know survives an upgrade)
 

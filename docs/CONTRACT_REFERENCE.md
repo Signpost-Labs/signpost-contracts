@@ -1,6 +1,6 @@
 # Contract Reference
 
-Complete public API reference for all four ScoutChain Soroban smart contracts.
+Complete public API reference for all four Promiscope Soroban smart contracts.
 Every `pub fn` in every `#[contractimpl]` block is documented here.
 
 > [!NOTE]
@@ -75,7 +75,7 @@ are Unix seconds. See [Timestamp](GLOSSARY.md#timestamp).
 
 ---
 
-#### `initialize(admin: Address) -> Result<(), ScoutChainError>`
+#### `initialize(admin: Address) -> Result<(), PromiscopeError>`
 
 One-time contract setup. Must be called before any other function.
 
@@ -91,7 +91,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `propose_admin(new_admin: Address) -> Result<(), ScoutChainError>`
+#### `propose_admin(new_admin: Address) -> Result<(), PromiscopeError>`
 
 Store or replace a pending admin proposal. The current admin retains all
 privileges until the proposed address accepts.
@@ -109,7 +109,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `accept_admin() -> Result<(), ScoutChainError>`
+#### `accept_admin() -> Result<(), PromiscopeError>`
 
 Finalize the pending transfer. The stored pending admin must sign, proving
 control of the address. Acceptance updates the admin and clears the proposal.
@@ -126,14 +126,14 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID -- accept_admin
 
 ---
 
-#### `transfer_admin(new_admin: Address) -> Result<(), ScoutChainError>`
+#### `transfer_admin(new_admin: Address) -> Result<(), PromiscopeError>`
 
 Deprecated compatibility alias for `propose_admin`. It does not immediately
 change the admin; the proposed address must still call `accept_admin`.
 
 ---
 
-#### `register_player(wallet: Address, vitals: PlayerVitals, ipfs_hashes: Vec<String>) -> Result<u64, ScoutChainError>`
+#### `register_player(wallet: Address, vitals: PlayerVitals, ipfs_hashes: Vec<String>) -> Result<u64, PromiscopeError>`
 
 Create a new on-chain player profile at Level 0 (Unverified).
 Returns the assigned `player_id`.
@@ -158,7 +158,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `update_profile(player_id: u64, ipfs_hashes: Vec<String>) -> Result<(), ScoutChainError>`
+#### `update_profile(player_id: u64, ipfs_hashes: Vec<String>) -> Result<(), PromiscopeError>`
 
 Replace a player's IPFS content hashes (highlight reels, photos). Note that `update_profile` accepts only `ipfs_hashes` and does not take or modify `PlayerVitals` fields. Because player vitals are write-once at registration time and immutable post-registration, length validation runs exclusively during `register_player` and no post-registration update path exists to set or modify vitals.
 
@@ -176,7 +176,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `deregister_player(player_id: u64) -> Result<(), ScoutChainError>`
+#### `deregister_player(player_id: u64) -> Result<(), PromiscopeError>`
 
 Remove a player profile and all associated wallet index entries.
 Implements the GDPR right-to-erasure. The `player_id` is permanently freed.
@@ -193,7 +193,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `deactivate_player(player_id: u64) -> Result<(), ScoutChainError>`
+#### `deactivate_player(player_id: u64) -> Result<(), PromiscopeError>`
 
 Hide a player from `filter_players` results without erasing their profile
 (soft-delete). Sets the `PlayerDeactivated` flag; the player's data and
@@ -212,7 +212,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `reactivate_player(player_id: u64) -> Result<(), ScoutChainError>`
+#### `reactivate_player(player_id: u64) -> Result<(), PromiscopeError>`
 
 Reverse a prior `deactivate_player` call. Clears the `PlayerDeactivated`
 flag, making the player visible in `filter_players` results again.
@@ -230,7 +230,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `register_scout(wallet: Address, region: String) -> Result<u64, ScoutChainError>`
+#### `register_scout(wallet: Address, region: String) -> Result<u64, PromiscopeError>`
 
 Create a new scout profile. Returns the assigned `scout_id`.
 Scouts start as unverified (`verified: false`); call `verify_scout` to promote.
@@ -249,7 +249,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `verify_scout(scout_id: u64) -> Result<(), ScoutChainError>`
+#### `verify_scout(scout_id: u64) -> Result<(), PromiscopeError>`
 
 Mark a scout as verified. Verified scouts gain trust-signal visibility on the
 discovery dashboard.
@@ -266,14 +266,14 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `set_progress_contract(addr: Address) -> Result<(), ScoutChainError>`
+#### `set_progress_contract(addr: Address) -> Result<(), PromiscopeError>`
 
 Store the progress contract address so `set_player_level` may only be called
 by it.
 
 ---
 
-#### `set_reg_cooldown(cooldown_secs: u64) -> Result<(), ScoutChainError>`
+#### `set_reg_cooldown(cooldown_secs: u64) -> Result<(), PromiscopeError>`
 
 Set the per-wallet registration cooldown in seconds. Pass `0` to disable the
 cooldown entirely. Bounds: `0..=604_800` (7 days).
@@ -302,7 +302,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID -- get_reg_cooldown
 
 ---
 
-#### `set_progress_contract(addr: Address) -> Result<(), ScoutChainError>`
+#### `set_progress_contract(addr: Address) -> Result<(), PromiscopeError>`
 
 Store the progress contract address so `set_player_level` may only be called
 by that contract. Must be called after both contracts are deployed (admin only).
@@ -353,7 +353,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `set_player_level(player_id: u64, level: ProgressLevel) -> Result<(), ScoutChainError>`
+#### `set_player_level(player_id: u64, level: ProgressLevel) -> Result<(), PromiscopeError>`
 
 Update a player's stored `ProgressLevel`. Only callable by the registered
 progress contract address via cross-contract invocation.
@@ -384,7 +384,7 @@ _Not intended for direct invocation. Called atomically by `progress.advance_leve
 
 ---
 
-#### `get_player(player_id: u64) -> Result<PlayerProfile, ScoutChainError>`
+#### `get_player(player_id: u64) -> Result<PlayerProfile, PromiscopeError>`
 
 Retrieve the full player profile including wallet, vitals, IPFS hashes, and
 current progress level.
@@ -401,7 +401,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `get_player_by_wallet(wallet: Address) -> Result<PlayerProfile, ScoutChainError>`
+#### `get_player_by_wallet(wallet: Address) -> Result<PlayerProfile, PromiscopeError>`
 
 Look up a player profile by their Stellar wallet address. Useful when the
 `player_id` is unknown.
@@ -418,7 +418,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `get_scout(scout_id: u64) -> Result<ScoutProfile, ScoutChainError>`
+#### `get_scout(scout_id: u64) -> Result<ScoutProfile, PromiscopeError>`
 
 Retrieve a scout profile by ID.
 
@@ -434,7 +434,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `get_scout_by_wallet(wallet: Address) -> Result<ScoutProfile, ScoutChainError>`
+#### `get_scout_by_wallet(wallet: Address) -> Result<ScoutProfile, PromiscopeError>`
 
 Retrieve a scout profile by wallet address, resolving the wallet to a
 `scout_id` via the `DataKey::ScoutByWallet` index and delegating to `get_scout`.
@@ -452,7 +452,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `get_player_id_by_wallet(wallet: Address) -> Result<u64, ScoutChainError>`
+#### `get_player_id_by_wallet(wallet: Address) -> Result<u64, PromiscopeError>`
 
 Resolve a wallet `Address` to its `player_id` via the `DataKey::PlayerByWallet`
 index. Used by `scout_access.revoke_evidence_access` to verify that the
@@ -470,7 +470,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `get_scout_verification(scout_id: u64) -> Result<ScoutVerificationRecord, ScoutChainError>`
+#### `get_scout_verification(scout_id: u64) -> Result<ScoutVerificationRecord, PromiscopeError>`
 
 Retrieve just the structured verification record (`verified`, `verified_by`,
 `verified_at`, `evidence_ref`, `method`) for a scout by ID, without the rest
@@ -504,7 +504,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID -- get_player_count
 
 ---
 
-#### `get_player_summary(player_id: u64) -> Result<PlayerSummary, ScoutChainError>`
+#### `get_player_summary(player_id: u64) -> Result<PlayerSummary, PromiscopeError>`
 
 Return a lightweight player summary (vitals + level, no IPFS hashes or wallet)
 for efficient list rendering on the scout discovery dashboard.
@@ -521,7 +521,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `get_players(ids: Vec<u64>) -> Result<Vec<PlayerSummary>, ScoutChainError>`
+#### `get_players(ids: Vec<u64>) -> Result<Vec<PlayerSummary>, PromiscopeError>`
 
 Batch-fetch player summaries for a list of IDs. Unknown IDs are skipped.
 
@@ -553,7 +553,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID -- get_scout_count
 
 ---
 
-#### `filter_players(region: String, position: String, min_level: ProgressLevel, offset: u32, limit: u32) -> Result<FilterResult, ScoutChainError>`
+#### `filter_players(region: String, position: String, min_level: ProgressLevel, offset: u32, limit: u32) -> Result<FilterResult, PromiscopeError>`
 
 Scout discovery query. Returns up to 50 player profiles matching the given
 region, position, and minimum progress level.
@@ -608,7 +608,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `pause_contract() -> Result<(), ScoutChainError>`
+#### `pause_contract() -> Result<(), PromiscopeError>`
 
 Halt all state-changing operations (circuit breaker). Read-only queries remain
 available.
@@ -624,7 +624,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID -- pause_contract
 
 ---
 
-#### `unpause_contract() -> Result<(), ScoutChainError>`
+#### `unpause_contract() -> Result<(), PromiscopeError>`
 
 Resume normal operations after a pause.
 
@@ -654,7 +654,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID -- health
 
 ---
 
-#### `get_player_summary(player_id: u64) -> Result<PlayerSummary, ScoutChainError>`
+#### `get_player_summary(player_id: u64) -> Result<PlayerSummary, PromiscopeError>`
 
 Return a lightweight player view without IPFS hashes or wallet address.
 Useful for scout discovery lists where the full profile is not needed.
@@ -671,7 +671,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `get_players(ids: Vec<u64>) -> Result<Vec<PlayerSummary>, ScoutChainError>`
+#### `get_players(ids: Vec<u64>) -> Result<Vec<PlayerSummary>, PromiscopeError>`
 
 Batch-fetch lightweight player summaries for up to 20 IDs in a single call.
 Missing IDs are silently skipped (partial hits are returned without error).
@@ -689,7 +689,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `get_scouts(ids: Vec<u64>) -> Result<Vec<ScoutProfile>, ScoutChainError>`
+#### `get_scouts(ids: Vec<u64>) -> Result<Vec<ScoutProfile>, PromiscopeError>`
 
 Batch-fetch full scout profiles for up to 20 IDs in a single call. Mirrors
 `get_players` semantics exactly: missing IDs are silently skipped with partial
@@ -728,7 +728,7 @@ stellar contract invoke --id $REGISTRATION_CONTRACT_ID -- version
 
 ---
 
-#### `redeem_migration_player(wallet: Address, vitals: PlayerVitals, ipfs_hashes: Vec<String>, level: ProgressLevel, player_id: u64, registered_at: u64, updated_at: u64, authorization: MigrationAuthorization) -> Result<u64, ScoutChainError>`
+#### `redeem_migration_player(wallet: Address, vitals: PlayerVitals, ipfs_hashes: Vec<String>, level: ProgressLevel, player_id: u64, registered_at: u64, updated_at: u64, authorization: MigrationAuthorization) -> Result<u64, PromiscopeError>`
 
 Redeem an off-chain signed migration authorization to recreate a player profile
 on a freshly deployed contract. A relayer with no player private key can call
@@ -757,7 +757,7 @@ stellar contract invoke --id $NEW_REGISTRATION_CONTRACT_ID \
 
 ---
 
-#### `redeem_migration_scout(wallet: Address, region: String, scout_id: u64, registered_at: u64, verified: bool, authorization: MigrationAuthorization) -> Result<u64, ScoutChainError>`
+#### `redeem_migration_scout(wallet: Address, region: String, scout_id: u64, registered_at: u64, verified: bool, authorization: MigrationAuthorization) -> Result<u64, PromiscopeError>`
 
 Redeem an off-chain signed migration authorization to recreate a scout profile
 on a freshly deployed contract. A relayer with no scout private key can call
@@ -789,7 +789,7 @@ stellar contract invoke --id $NEW_REGISTRATION_CONTRACT_ID \
 A single wallet may register as both a player and a scout. Cross-role
 registration is permitted; duplicate prevention is enforced per role only.
 
-### ScoutChainError Codes
+### PromiscopeError Codes
 
 | Code | Error | Description |
 |------|-------|-------------|
@@ -839,12 +839,12 @@ registration is permitted; duplicate prevention is enforced per role only.
 
 | Function | Auth | Description |
 |----------|------|-------------|
-| `admin_seed_player(wallet, vitals, ipfs_hashes, level, player_id, registered_at, updated_at) -> Result<u64, ScoutChainError>` | admin | Seed a historical player profile at a fixed `player_id` and timestamps during a migration window. |
-| `admin_seed_scout(wallet, region, scout_id, registered_at, verified) -> Result<u64, ScoutChainError>` | admin | Seed a historical scout profile at a fixed `scout_id` during a migration window. |
-| `restore_player_record(player_id) -> Result<(), ScoutChainError>` | admin | Re-extend the TTL of an archived player record and re-insert it into the filter indexes before it is permanently evicted. Errors `PlayerRecordEvicted` if the key is already gone. |
-| `restore_scout_record(scout_id) -> Result<(), ScoutChainError>` | admin | Re-extend the TTL of an archived scout record before it is permanently evicted. Errors `ScoutRecordEvicted` if the key is already gone. |
+| `admin_seed_player(wallet, vitals, ipfs_hashes, level, player_id, registered_at, updated_at) -> Result<u64, PromiscopeError>` | admin | Seed a historical player profile at a fixed `player_id` and timestamps during a migration window. |
+| `admin_seed_scout(wallet, region, scout_id, registered_at, verified) -> Result<u64, PromiscopeError>` | admin | Seed a historical scout profile at a fixed `scout_id` during a migration window. |
+| `restore_player_record(player_id) -> Result<(), PromiscopeError>` | admin | Re-extend the TTL of an archived player record and re-insert it into the filter indexes before it is permanently evicted. Errors `PlayerRecordEvicted` if the key is already gone. |
+| `restore_scout_record(scout_id) -> Result<(), PromiscopeError>` | admin | Re-extend the TTL of an archived scout record before it is permanently evicted. Errors `ScoutRecordEvicted` if the key is already gone. |
 | `is_player_deactivated(player_id) -> bool` | none | Whether the player is currently soft-hidden from `filter_players` results. |
-| `get_player_status(player_id) -> Result<PlayerStatus, ScoutChainError>` | none | Combined existence / deactivation status for a player. |
+| `get_player_status(player_id) -> Result<PlayerStatus, PromiscopeError>` | none | Combined existence / deactivation status for a player. |
 | `get_scout_status(scout_id) -> ScoutStatus` | none | Registration / verification status for a scout (`NotRegistered`, `Registered`, `Verified`). |
 
 ---
@@ -1019,7 +1019,7 @@ stellar contract invoke --id $VERIFICATION_CONTRACT_ID \
 Returns a snapshot of both peer-address pointers this contract holds
 (`progress_contract`, `registration_contract`), each as a
 `WiringLink { address: Option<Address>, epoch: u32 }`
-(`scoutchain_shared_types::WiringLink`). `VerificationWiringState::is_fully_wired()`
+(`promiscope_shared_types::WiringLink`). `VerificationWiringState::is_fully_wired()`
 returns `true` iff both links are configured. Read-only, no auth required —
 see [`docs/WIRING_REGISTRY_DESIGN.md`](WIRING_REGISTRY_DESIGN.md).
 
@@ -1696,7 +1696,7 @@ stellar contract invoke --id $VERIFICATION_CONTRACT_ID \
   --wallets '["$WALLET_1","$WALLET_2","$WALLET_3"]'
 ```
 
-Compare with [`get_players`](#get_playersids-vecu64---resultvecplayersummary-scoutchainerror) in the registration contract for the equivalent batch-fetch pattern.
+Compare with [`get_players`](#get_playersids-vecu64---resultvecplayersummary-promiscopeerror) in the registration contract for the equivalent batch-fetch pattern.
 
 ---
 
@@ -3823,7 +3823,7 @@ event data so off-chain indexers can record the event. Returns
 
 This resolves the open item in `docs/FEE_CONFIG_PROPOSAL_DESIGN.md` that
 previously marked cancellation as future work. See
-[#1178](https://github.com/scout-off/scout-off-contracts/issues/1178).
+[#1178](https://github.com/promiscope/promiscope-contracts/issues/1178).
 
 | | |
 |---|---|
@@ -5041,7 +5041,7 @@ except via the admin function `progress.reset_player_level`.
 Level promotion is triggered by `verification.approve_milestone`, which cross-calls
 [`progress.advance_level`](#advance_level-caller-address-player_id-u64-milestone_ref-u32---resultprogresslevel-progresserror).
 The new level is also reflected in `registration` queries, including
-[`registration.filter_players`](#filter_players-region-string-position-string-min_level-progresslevel---resultvecplayerprofile-scoutchainerror),
+[`registration.filter_players`](#filter_players-region-string-position-string-min_level-progresslevel---resultvecplayerprofile-promiscopeerror),
 which accepts a `min_level` argument to restrict results to players at or above a
 given tier.
 
@@ -5317,7 +5317,7 @@ pub struct TrialOffer {
 
 ## Error Codes
 
-### `ScoutChainError` (registration contract)
+### `PromiscopeError` (registration contract)
 
 | Code | Variant | Common Cause |
 |------|---------|--------------|
@@ -5583,7 +5583,7 @@ All events follow the unified `(Symbol, actor)` topic schema introduced in #246.
 
 ## Cross-Contract Wiring
 
-See [`docs/WIRING_REGISTRY_DESIGN.md`](WIRING_REGISTRY_DESIGN.md) for the full design: every contract's `get_wiring_state()` getter, the `WiringLink { address, epoch }` shape shared via `scoutchain_shared_types`, the re-wiring policy (freely re-settable everywhere except verification's two legacy first-call-only setters, preserved for backward compatibility), and how `scripts/verify-cross-contract-wiring.sh` detects a partially-applied re-wiring across the eight peer-address pointers.
+See [`docs/WIRING_REGISTRY_DESIGN.md`](WIRING_REGISTRY_DESIGN.md) for the full design: every contract's `get_wiring_state()` getter, the `WiringLink { address, epoch }` shape shared via `promiscope_shared_types`, the re-wiring policy (freely re-settable everywhere except verification's two legacy first-call-only setters, preserved for backward compatibility), and how `scripts/verify-cross-contract-wiring.sh` detects a partially-applied re-wiring across the eight peer-address pointers.
 
 ---
 

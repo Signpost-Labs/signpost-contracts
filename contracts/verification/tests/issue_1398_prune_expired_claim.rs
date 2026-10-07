@@ -1,6 +1,6 @@
 //! Issue #1398: prune expired attestation claims and clean vote keys.
 
-use scoutchain_verification::{
+use promiscope_verification::{
     AttestationStatus, VerificationContract, VerificationContractClient, VerificationError,
 };
 use soroban_sdk::{

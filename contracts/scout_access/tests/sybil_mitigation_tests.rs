@@ -7,8 +7,8 @@
 //! - Admin can verify scouts
 //! - Registration contract wiring
 
-use scoutchain_registration::{RegistrationContract, RegistrationContractClient};
-use scoutchain_scout_access::{
+use promiscope_registration::{RegistrationContract, RegistrationContractClient};
+use promiscope_scout_access::{
     FeeConfig, ScoutAccessContract, ScoutAccessContractClient, SubscriptionTier,
 };
 use soroban_sdk::{
@@ -120,7 +120,7 @@ fn test_unverified_scout_cannot_subscribe_pro() {
 /// precisely via `is_err()`.
 #[test]
 fn test_unverified_scout_rejected_with_scout_not_verified_error() {
-    use scoutchain_scout_access::ScoutAccessError;
+    use promiscope_scout_access::ScoutAccessError;
 
     let h = setup();
 

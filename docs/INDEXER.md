@@ -98,7 +98,7 @@ Requires:
 - The [pinned `stellar-cli` version](CONTRIBUTING.md#installing-the-pinned-stellar-cli-version)
   used by `scripts/generate-bindings.sh`, on your `PATH`.
 - A `DATABASE_URL` pointing at the backend's Postgres instance. **This
-  database lives in the `scoutchain-backend` repo, not here** — this script
+  database lives in the `promiscope-backend` repo, not here** — this script
   is intentionally standalone and takes the connection string as a parameter
   rather than assuming any deployment.
 - The four `*_CONTRACT_ID` variables, either exported directly or available in
@@ -107,7 +107,7 @@ Requires:
 ```bash
 npm install
 
-DATABASE_URL=postgres://user:pass@host:5432/scoutchain \
+DATABASE_URL=postgres://user:pass@host:5432/promiscope \
 REGISTRATION_CONTRACT_ID=C... \
 VERIFICATION_CONTRACT_ID=C... \
 PROGRESS_CONTRACT_ID=C... \
@@ -165,7 +165,7 @@ only (see the table above).
    the backend's event-processing logs around when the drift likely started,
    and consider a full replay of that table from the on-chain event log rather
    than patching rows by hand.
-5. **Escalate** to whoever owns the `scoutchain-backend` indexer if the cause
+5. **Escalate** to whoever owns the `promiscope-backend` indexer if the cause
    isn't obvious from the mismatch detail — the report includes the exact key,
    field, on-chain value, and off-chain value needed to start that
    investigation.

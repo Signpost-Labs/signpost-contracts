@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// ScoutChain — event-log audit tool for player history reconstruction.
+// Promiscope — event-log audit tool for player history reconstruction.
 //
 // Reconstructs a player's complete derived state purely from raw events
 // and cross-validates against live contract state and indexer database.
@@ -485,7 +485,7 @@ async function auditPlayerHistory(rpcUrl, contractIds, playerId, pg) {
 
 function printTextReport(auditResults) {
   console.log("=".repeat(72));
-  console.log("  ScoutChain event-history audit");
+  console.log("  Promiscope event-history audit");
   console.log("=".repeat(72));
 
   for (const result of auditResults) {

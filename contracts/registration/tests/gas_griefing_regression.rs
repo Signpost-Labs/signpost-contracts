@@ -7,9 +7,9 @@
 //! See docs/GAS_GRIEFING_AUDIT.md — Vector 2: register_player Spam Inflates
 //! filter_players Cost.
 
-pub use scoutchain_registration::PlayerVitals;
-use scoutchain_registration::{RegistrationContract, RegistrationContractClient};
-use scoutchain_shared_types::ProgressLevel;
+pub use promiscope_registration::PlayerVitals;
+use promiscope_registration::{RegistrationContract, RegistrationContractClient};
+use promiscope_shared_types::ProgressLevel;
 use soroban_sdk::{testutils::Address as _, Address, Env, String, Vec};
 
 fn setup() -> (Env, RegistrationContractClient<'static>) {

@@ -1,6 +1,6 @@
-# ScoutChain — Database Migrations
+# Promiscope — Database Migrations
 
-This directory contains the PostgreSQL schema migrations for the ScoutChain
+This directory contains the PostgreSQL schema migrations for the Promiscope
 backend event indexer. Each migration is a numbered SQL file that is applied
 in ascending order to bring the database schema up to date.
 
@@ -99,7 +99,7 @@ ordering defined above. See `docs/DEPLOYMENT.md` for the full deployment guide.
 | `004_revoked_tokens.sql` | `revoked_tokens` table for explicit JWT revocation on sign-out and credential rotation |
 # Database Migrations
 
-PostgreSQL migration files for the ScoutChain backend event indexer.
+PostgreSQL migration files for the Promiscope backend event indexer.
 
 ## Apply Order
 

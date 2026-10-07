@@ -8,7 +8,7 @@ partial-rewiring detection, and a rewritten verification script.
 
 ## Problem Statement (original, #801)
 
-ScoutChain's four contracts are interconnected by peer-address pointer
+Promiscope's four contracts are interconnected by peer-address pointer
 fields. The table below enumerates all **eight** links. It originates from
 the #801 design doc — which listed only six — and has been corrected to
 match the current code and the **"The Full Picture"** table below; the two
@@ -185,7 +185,7 @@ Note) and stays that way — this rollout only adds epoch bookkeeping and the
 ### Epoch-based partial-rewiring detection
 
 Every `WiringLink { address: Option<Address>, epoch: u32 }`
-(`scoutchain_shared_types::WiringLink`, shared by all four contracts) pairs
+(`promiscope_shared_types::WiringLink`, shared by all four contracts) pairs
 the peer address with a monotonically-incrementing epoch, bumped by
 `write_wiring_link` on every successful set/update call.
 

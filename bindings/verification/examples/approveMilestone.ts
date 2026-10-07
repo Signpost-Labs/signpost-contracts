@@ -1,16 +1,16 @@
 /**
  * Reference implementation for `approveMilestone()`.
  *
- * The production milestone approval flow consumed by ScoutChain clients lives
- * in the separate `scoutchain-backend` repo (see `../../../ai.md` and
+ * The production milestone approval flow consumed by Promiscope clients lives
+ * in the separate `promiscope-backend` repo (see `../../../ai.md` and
  * `../../../README.md` — "Backend and frontend repos"). This file is the
  * pattern to port into that backend to make milestone approvals submit real
  * on-chain transactions rather than stubs.
  *
- * This file is not imported anywhere in `scout-off-contracts` — it is a
+ * This file is not imported anywhere in `promiscope-contracts` — it is a
  * reference implementation only. It builds and submits a real
  * `approve_milestone(validator_wallet, player_id, description, evidence_hash)`
- * Soroban transaction via the generated `@scoutchain/bindings-verification`
+ * Soroban transaction via the generated `@promiscope/bindings-verification`
  * client and returns the on-chain milestone index assigned by the contract
  * (`Result<u32, VerificationError>`) together with the Soroban transaction
  * hash.
@@ -44,7 +44,7 @@
  * defensively checks for both shapes — verify against your generated
  * `src/index.ts` and adjust if a newer codegen version changes that convention.
  */
-import { Client as VerificationClient, networks } from "@scoutchain/bindings-verification";
+import { Client as VerificationClient, networks } from "@promiscope/bindings-verification";
 import type { SignTransaction } from "@stellar/stellar-sdk/contract";
 
 export interface ApproveMilestoneParams {

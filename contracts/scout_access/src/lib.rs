@@ -14,7 +14,7 @@ pub use types::{
 
 use soroban_sdk::{contract, contractimpl, token, Address, Env, String, Vec};
 
-use scoutchain_shared_types::{
+use promiscope_shared_types::{
     read_wiring_link, require_admin,
     safe_math::{safe_add_i128, safe_add_u32, safe_add_u64, safe_mul_i128},
     validate_cid, write_wiring_link, ContractHealth,
@@ -24,7 +24,7 @@ use scoutchain_shared_types::{
 // The #[contractclient] macro generates a real Client that performs the
 // on-chain call — replacing the hand-written mock that was here before.
 mod progress_contract {
-    use scoutchain_shared_types::ProgressLevel;
+    use promiscope_shared_types::ProgressLevel;
     use soroban_sdk::{contractclient, contracterror, Address, Env};
 
     // Named uniquely (not `Error`) so the `stellar contract bindings
@@ -82,9 +82,9 @@ mod registration_contract {
     #[derive(Copy, Clone, Debug, PartialEq)]
     #[repr(u32)]
     pub enum RegClientError {
-        /// Matches `ScoutChainError::PlayerNotFound` (code 3).
+        /// Matches `PromiscopeError::PlayerNotFound` (code 3).
         PlayerNotFound = 3,
-        /// Matches `ScoutChainError::ScoutNotFound` (code 12).
+        /// Matches `PromiscopeError::ScoutNotFound` (code 12).
         ScoutNotFound = 12,
     }
 
@@ -1498,15 +1498,15 @@ impl ScoutAccessContract {
         // #468: Update per-scout trial offer index so scouts can enumerate all
         // trial offers they have logged without an off-chain event index.
         let scout_index_key = DataKey::ScoutTrialOffers(scout.clone());
-        let mut scout_offers: soroban_sdk::Vec<(u64, u32)> = env
+        let mut trial_offer_records: soroban_sdk::Vec<(u64, u32)> = env
             .storage()
             .persistent()
             .get(&scout_index_key)
             .unwrap_or_else(|| soroban_sdk::Vec::new(&env));
-        scout_offers.push_back((player_id, next_index));
+        trial_offer_records.push_back((player_id, next_index));
         env.storage()
             .persistent()
-            .set(&scout_index_key, &scout_offers);
+            .set(&scout_index_key, &trial_offer_records);
         env.storage().persistent().extend_ttl(
             &scout_index_key,
             TRIAL_TTL_THRESHOLD,
@@ -2823,7 +2823,7 @@ impl ScoutAccessContract {
     /// - `TrialOffer(player_id, trial_index)` — the offer record
     /// - `TrialEscrow(player_id, trial_index)` — escrow record (if provided)
     /// - `TrialCounter(player_id)` — per-player offer count
-    /// - `ScoutTrialOffers(scout)` — per-scout offers-sent index
+    /// - `ScoutTrialOffers(scout)` — index of offers submitted by this account
     ///
     /// `trial_index` is 1-based, matching `log_trial_offer`: the first offer
     /// a scout logs is index 1 and each subsequent seed must be
@@ -3360,7 +3360,7 @@ impl ScoutAccessContract {
         tier: &SubscriptionTier,
         player_id: u64,
     ) -> Result<(), ScoutAccessError> {
-        use scoutchain_shared_types::ProgressLevel;
+        use promiscope_shared_types::ProgressLevel;
 
         // Basic tier: no contact entitlement whatsoever.
         if *tier == SubscriptionTier::Basic {
@@ -5398,11 +5398,11 @@ mod tests {
 
     #[test]
     fn test_log_trial_offer_advances_player_to_elite_tier() {
-        use scoutchain_progress::ProgressContract;
-        use scoutchain_progress::ProgressContractClient;
-        use scoutchain_shared_types::ProgressLevel;
-        use scoutchain_verification::VerificationContract;
-        use scoutchain_verification::VerificationContractClient;
+        use promiscope_progress::ProgressContract;
+        use promiscope_progress::ProgressContractClient;
+        use promiscope_shared_types::ProgressLevel;
+        use promiscope_verification::VerificationContract;
+        use promiscope_verification::VerificationContractClient;
 
         let env = Env::default();
         env.mock_all_auths();
@@ -5515,11 +5515,11 @@ mod tests {
 
     #[test]
     fn test_log_trial_offer_already_at_max_level_does_not_fail() {
-        use scoutchain_progress::ProgressContract;
-        use scoutchain_progress::ProgressContractClient;
-        use scoutchain_shared_types::ProgressLevel;
-        use scoutchain_verification::VerificationContract;
-        use scoutchain_verification::VerificationContractClient;
+        use promiscope_progress::ProgressContract;
+        use promiscope_progress::ProgressContractClient;
+        use promiscope_shared_types::ProgressLevel;
+        use promiscope_verification::VerificationContract;
+        use promiscope_verification::VerificationContractClient;
 
         let env = Env::default();
         env.mock_all_auths();

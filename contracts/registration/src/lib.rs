@@ -16,7 +16,7 @@ use types::{
     StoredPlayerProfile,
 };
 
-pub use errors::ScoutChainError;
+pub use errors::PromiscopeError;
 pub use types::{MigrationAuthorization, MigrationRole, ScoutStatus};
 // `PlayerVitals` is an *input* type of the public `register_player` function, so
 // it must be nameable by external callers (integration tests, generated
@@ -24,7 +24,7 @@ pub use types::{MigrationAuthorization, MigrationRole, ScoutStatus};
 // scope for the rest of this module.
 pub use types::PlayerVitals;
 
-use scoutchain_shared_types::{
+use promiscope_shared_types::{
     read_wiring_link, require_admin, safe_math::safe_add_u64, write_wiring_link,
 };
 use soroban_sdk::{contract, contractimpl, Address, Bytes, BytesN, Env, String, Vec};
@@ -32,7 +32,7 @@ use soroban_sdk::{contract, contractimpl, Address, Bytes, BytesN, Env, String, V
 // Generated client stub for the progress contract — used to resolve a player's
 // current level at read time.  `level` is never stored in this contract.
 mod progress_contract {
-    use scoutchain_shared_types::ProgressLevel;
+    use promiscope_shared_types::ProgressLevel;
     use soroban_sdk::{contractclient, Env};
 
     #[contractclient(name = "Client")]
@@ -98,7 +98,7 @@ const CONTRACT_VERSION: &str = env!("CARGO_PKG_VERSION");
 /// - Trims whitespace
 /// - Uppercases the string
 /// - Validates against the canonical format
-fn canonicalize_region(env: &Env, region: &String) -> Result<String, ScoutChainError> {
+fn canonicalize_region(env: &Env, region: &String) -> Result<String, PromiscopeError> {
     let trimmed = region.trim();
     let upper = trimmed.to_uppercase();
 
@@ -106,25 +106,25 @@ fn canonicalize_region(env: &Env, region: &String) -> Result<String, ScoutChainE
     let bytes = upper.as_bytes();
     if bytes.len() < 2 || bytes.len() > 6 {
         // Min: "AA" (2), Max: "AA-AAA" (6)
-        return Err(ScoutChainError::InvalidInput);
+        return Err(PromiscopeError::InvalidInput);
     }
 
     // First two chars must be A-Z
     if !bytes[0].is_ascii_uppercase() || !bytes[1].is_ascii_uppercase() {
-        return Err(ScoutChainError::InvalidInput);
+        return Err(PromiscopeError::InvalidInput);
     }
 
     // If there's a subdivision, it must start with '-' and have 1-3 alphanumeric chars
     if bytes.len() > 2 {
         if bytes[2] != b'-' {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
         if bytes.len() < 4 || bytes.len() > 6 {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
         for &b in &bytes[3..] {
             if !b.is_ascii_alphanumeric() {
-                return Err(ScoutChainError::InvalidInput);
+                return Err(PromiscopeError::InvalidInput);
             }
         }
     }
@@ -136,13 +136,13 @@ fn canonicalize_region(env: &Env, region: &String) -> Result<String, ScoutChainE
 /// - Trims whitespace
 /// - Uppercases the string
 /// - Validates against known position codes (GK, CB, FB, DM, CM, AM, W, ST, etc.)
-fn canonicalize_position(env: &Env, position: &String) -> Result<String, ScoutChainError> {
+fn canonicalize_position(env: &Env, position: &String) -> Result<String, PromiscopeError> {
     let trimmed = position.trim();
     let upper = trimmed.to_uppercase();
 
     let bytes = upper.as_bytes();
     if bytes.is_empty() || bytes.len() > MAX_STRING_LEN as usize {
-        return Err(ScoutChainError::InvalidInput);
+        return Err(PromiscopeError::InvalidInput);
     }
 
     // Validate against known position codes (case-insensitive match)
@@ -161,7 +161,7 @@ fn canonicalize_position(env: &Env, position: &String) -> Result<String, ScoutCh
     }
 
     if !valid {
-        return Err(ScoutChainError::InvalidInput);
+        return Err(PromiscopeError::InvalidInput);
     }
 
     Ok(String::from_str(env, core::str::from_utf8(bytes).unwrap()))
@@ -171,17 +171,17 @@ fn canonicalize_position(env: &Env, position: &String) -> Result<String, ScoutCh
 /// - Trims whitespace
 /// - Uppercases the string
 /// - Validates exactly 2 uppercase letters
-fn canonicalize_nationality(env: &Env, nationality: &String) -> Result<String, ScoutChainError> {
+fn canonicalize_nationality(env: &Env, nationality: &String) -> Result<String, PromiscopeError> {
     let trimmed = nationality.trim();
     let upper = trimmed.to_uppercase();
 
     let bytes = upper.as_bytes();
     if bytes.len() != 2 {
-        return Err(ScoutChainError::InvalidInput);
+        return Err(PromiscopeError::InvalidInput);
     }
 
     if !bytes[0].is_ascii_uppercase() || !bytes[1].is_ascii_uppercase() {
-        return Err(ScoutChainError::InvalidInput);
+        return Err(PromiscopeError::InvalidInput);
     }
 
     Ok(String::from_str(env, core::str::from_utf8(bytes).unwrap()))
@@ -189,14 +189,14 @@ fn canonicalize_nationality(env: &Env, nationality: &String) -> Result<String, S
 
 /// Normalize a filter input (region or position) for query matching.
 /// Uses the same canonicalization logic but allows empty strings (meaning "no filter").
-fn normalize_filter_region(env: &Env, region: &String) -> Result<String, ScoutChainError> {
+fn normalize_filter_region(env: &Env, region: &String) -> Result<String, PromiscopeError> {
     if region.is_empty() {
         return Ok(String::from_str(env, ""));
     }
     canonicalize_region(env, region)
 }
 
-fn normalize_filter_position(env: &Env, position: &String) -> Result<String, ScoutChainError> {
+fn normalize_filter_position(env: &Env, position: &String) -> Result<String, PromiscopeError> {
     if position.is_empty() {
         return Ok(String::from_str(env, ""));
     }
@@ -213,9 +213,9 @@ impl RegistrationContract {
     // -------------------------------------------------------------------------
 
     /// One-time contract initialisation. Must be called before any other function.
-    pub fn initialize(env: Env, admin: Address) -> Result<(), ScoutChainError> {
+    pub fn initialize(env: Env, admin: Address) -> Result<(), PromiscopeError> {
         if env.storage().instance().has(&DataKey::Initialized) {
-            return Err(ScoutChainError::AlreadyInitialized);
+            return Err(PromiscopeError::AlreadyInitialized);
         }
         admin.require_auth();
         env.storage().persistent().set(&DataKey::Admin, &admin);
@@ -235,7 +235,7 @@ impl RegistrationContract {
 
     /// Propose a replacement administrator. The current admin remains active
     /// until the proposed address calls `accept_admin`.
-    pub fn propose_admin(env: Env, new_admin: Address) -> Result<(), ScoutChainError> {
+    pub fn propose_admin(env: Env, new_admin: Address) -> Result<(), PromiscopeError> {
         let old_admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         env.storage()
             .persistent()
@@ -250,17 +250,17 @@ impl RegistrationContract {
     }
 
     /// Accept a pending admin transfer. Only the proposed address can accept.
-    pub fn accept_admin(env: Env) -> Result<(), ScoutChainError> {
+    pub fn accept_admin(env: Env) -> Result<(), PromiscopeError> {
         let old_admin: Address = env
             .storage()
             .persistent()
             .get(&DataKey::Admin)
-            .ok_or(ScoutChainError::NotInitialized)?;
+            .ok_or(PromiscopeError::NotInitialized)?;
         let new_admin: Address = env
             .storage()
             .persistent()
             .get(&DataKey::PendingAdmin)
-            .ok_or(ScoutChainError::PendingAdminNotSet)?;
+            .ok_or(PromiscopeError::PendingAdminNotSet)?;
         new_admin.require_auth();
         env.storage().persistent().set(&DataKey::Admin, &new_admin);
         env.storage().persistent().extend_ttl(
@@ -275,18 +275,18 @@ impl RegistrationContract {
 
     /// Deprecated alias for `propose_admin`; this no longer transfers control
     /// immediately. The proposed address must still call `accept_admin`.
-    pub fn transfer_admin(env: Env, new_admin: Address) -> Result<(), ScoutChainError> {
+    pub fn transfer_admin(env: Env, new_admin: Address) -> Result<(), PromiscopeError> {
         Self::propose_admin(env, new_admin)
     }
 
-    pub fn pause_contract(env: Env) -> Result<(), ScoutChainError> {
+    pub fn pause_contract(env: Env) -> Result<(), PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         env.storage().instance().set(&DataKey::Paused, &true);
         events::contract_paused(&env, &admin);
         Ok(())
     }
 
-    pub fn unpause_contract(env: Env) -> Result<(), ScoutChainError> {
+    pub fn unpause_contract(env: Env) -> Result<(), PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         env.storage().instance().set(&DataKey::Paused, &false);
         events::contract_unpaused(&env, &admin);
@@ -296,10 +296,10 @@ impl RegistrationContract {
     /// Set the per-wallet registration cooldown in seconds (admin only).
     /// Pass `0` to disable the cooldown entirely.
     /// Bounds: `0..=604_800` (7 days).
-    pub fn set_reg_cooldown(env: Env, cooldown_secs: u64) -> Result<(), ScoutChainError> {
+    pub fn set_reg_cooldown(env: Env, cooldown_secs: u64) -> Result<(), PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         if cooldown_secs > MAX_REG_COOLDOWN_SECS {
-            return Err(ScoutChainError::InvalidCooldown);
+            return Err(PromiscopeError::InvalidCooldown);
         }
         let old = env
             .storage()
@@ -327,7 +327,7 @@ impl RegistrationContract {
     pub fn upgrade(
         env: Env,
         new_wasm_hash: soroban_sdk::BytesN<32>,
-    ) -> Result<(), ScoutChainError> {
+    ) -> Result<(), PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         events::contract_upgraded(&env, &admin, &new_wasm_hash);
         env.deployer().update_current_contract_wasm(new_wasm_hash);
@@ -338,7 +338,7 @@ impl RegistrationContract {
     /// levels at query time (admin only). Freely re-settable — no
     /// first-call-only guard (see `docs/WIRING_REGISTRY_DESIGN.md` for why
     /// this is the majority policy across all four contracts).
-    pub fn set_progress_contract(env: Env, addr: Address) -> Result<(), ScoutChainError> {
+    pub fn set_progress_contract(env: Env, addr: Address) -> Result<(), PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         let epoch = write_wiring_link(
             &env,
@@ -378,12 +378,12 @@ impl RegistrationContract {
         env: Env,
         player_id: u64,
         level: ProgressLevel,
-    ) -> Result<(), ScoutChainError> {
+    ) -> Result<(), PromiscopeError> {
         let progress_contract: Address = env
             .storage()
             .instance()
             .get(&DataKey::ProgressContract)
-            .ok_or(ScoutChainError::Unauthorized)?;
+            .ok_or(PromiscopeError::Unauthorized)?;
         progress_contract.require_auth();
 
         // Use the stored profile directly rather than `load_player` — the
@@ -447,7 +447,7 @@ impl RegistrationContract {
         wallet: Address,
         vitals: PlayerVitals,
         ipfs_hashes: Vec<String>,
-    ) -> Result<u64, ScoutChainError> {
+    ) -> Result<u64, PromiscopeError> {
         Self::require_not_paused(&env)?;
         Self::require_initialized(&env)?;
         wallet.require_auth();
@@ -463,7 +463,7 @@ impl RegistrationContract {
             .persistent()
             .has(&DataKey::PlayerByWallet(wallet.clone()))
         {
-            return Err(ScoutChainError::AlreadyRegistered);
+            return Err(PromiscopeError::AlreadyRegistered);
         }
 
         // Enforce player cap to bound filter_players slow-path scan cost.
@@ -474,12 +474,12 @@ impl RegistrationContract {
             .map(|v: Vec<u64>| v.len() as u64)
             .unwrap_or(0);
         if player_count >= MAX_PLAYERS {
-            return Err(ScoutChainError::PlayerCapReached);
+            return Err(PromiscopeError::PlayerCapReached);
         }
 
         // Validate player age: must be at least MIN_PLAYER_AGE
         if vitals.age == 0 || vitals.age < MIN_PLAYER_AGE {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         // Validate vitals string lengths (pre-canonicalization bounds)
@@ -487,7 +487,7 @@ impl RegistrationContract {
             || vitals.region.len() > MAX_REGION_LEN
             || vitals.nationality.len() > MAX_STRING_LEN
         {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         // Canonicalize and validate vitals fields
@@ -497,12 +497,12 @@ impl RegistrationContract {
 
         // Validate age upper bound
         if vitals.age > MAX_PLAYER_AGE {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         // Validate ipfs_hashes: non-empty and at most MAX_IPFS_HASHES
         if ipfs_hashes.is_empty() || ipfs_hashes.len() > MAX_IPFS_HASHES {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         let player_id = Self::next_player_id(&env)?;
@@ -580,13 +580,13 @@ impl RegistrationContract {
         env: Env,
         player_id: u64,
         ipfs_hashes: Vec<String>,
-    ) -> Result<(), ScoutChainError> {
+    ) -> Result<(), PromiscopeError> {
         Self::require_not_paused(&env)?;
         Self::require_initialized(&env)?;
         let mut profile = Self::load_stored_player(&env, player_id)?;
         profile.wallet.require_auth();
         if ipfs_hashes.is_empty() || ipfs_hashes.len() > MAX_IPFS_HASHES {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
         profile.ipfs_hashes = ipfs_hashes;
         profile.updated_at = env.ledger().timestamp();
@@ -598,7 +598,7 @@ impl RegistrationContract {
     }
 
     /// Deregister a player profile (admin only, GDPR right-to-erasure).
-    pub fn deregister_player(env: Env, player_id: u64) -> Result<(), ScoutChainError> {
+    pub fn deregister_player(env: Env, player_id: u64) -> Result<(), PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         let profile = Self::load_stored_player(&env, player_id)?;
         // Read stored level directly — do NOT use resolve_level (which falls
@@ -672,7 +672,7 @@ impl RegistrationContract {
     /// Sets a `PlayerDeactivated(player_id)` flag that causes `filter_players`
     /// to skip this player. The on-chain profile, progress history, and all
     /// milestone data are fully preserved and still accessible via `get_player`.
-    pub fn deactivate_player(env: Env, player_id: u64) -> Result<(), ScoutChainError> {
+    pub fn deactivate_player(env: Env, player_id: u64) -> Result<(), PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         // Ensure the player actually exists before setting the flag.
         Self::load_stored_player(&env, player_id)?;
@@ -703,7 +703,7 @@ impl RegistrationContract {
     ///
     /// Clears the `PlayerDeactivated(player_id)` flag, making the player
     /// visible in `filter_players` results again.
-    pub fn reactivate_player(env: Env, player_id: u64) -> Result<(), ScoutChainError> {
+    pub fn reactivate_player(env: Env, player_id: u64) -> Result<(), PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         // Ensure the player actually exists.
         Self::load_stored_player(&env, player_id)?;
@@ -728,12 +728,12 @@ impl RegistrationContract {
     /// Sets a `ScoutDeactivated(scout_id)` flag that causes `get_scout_status`
     /// to return `Deactivated`. The on-chain profile is fully preserved and
     /// still accessible via `get_scout`.
-    pub fn deactivate_scout(env: Env, scout_id: u64) -> Result<(), ScoutChainError> {
+    pub fn deactivate_scout(env: Env, scout_id: u64) -> Result<(), PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         // Ensure the scout actually exists before setting the flag.
         let exists = env.storage().persistent().has(&DataKey::Scout(scout_id));
         if !exists {
-            return Err(ScoutChainError::ScoutNotFound);
+            return Err(PromiscopeError::ScoutNotFound);
         }
         env.storage()
             .persistent()
@@ -746,12 +746,12 @@ impl RegistrationContract {
     ///
     /// Clears the `ScoutDeactivated(scout_id)` flag, making the scout
     /// active again.
-    pub fn reactivate_scout(env: Env, scout_id: u64) -> Result<(), ScoutChainError> {
+    pub fn reactivate_scout(env: Env, scout_id: u64) -> Result<(), PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         // Ensure the scout actually exists.
         let exists = env.storage().persistent().has(&DataKey::Scout(scout_id));
         if !exists {
-            return Err(ScoutChainError::ScoutNotFound);
+            return Err(PromiscopeError::ScoutNotFound);
         }
         env.storage()
             .persistent()
@@ -769,7 +769,7 @@ impl RegistrationContract {
         env: Env,
         wallet: Address,
         region: String,
-    ) -> Result<u64, ScoutChainError> {
+    ) -> Result<u64, PromiscopeError> {
         Self::require_not_paused(&env)?;
         Self::require_initialized(&env)?;
         wallet.require_auth();
@@ -784,7 +784,7 @@ impl RegistrationContract {
             .persistent()
             .has(&DataKey::ScoutByWallet(wallet.clone()))
         {
-            return Err(ScoutChainError::AlreadyRegistered);
+            return Err(PromiscopeError::AlreadyRegistered);
         }
 
         let scout_id = Self::next_scout_id(&env)?;
@@ -852,27 +852,27 @@ impl RegistrationContract {
         player_id: u64,
         registered_at: u64,
         updated_at: u64,
-    ) -> Result<u64, ScoutChainError> {
+    ) -> Result<u64, PromiscopeError> {
         require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         Self::require_not_paused(&env)?;
         Self::require_initialized(&env)?;
 
         if env.storage().persistent().has(&DataKey::Player(player_id)) {
-            return Err(ScoutChainError::AlreadyRegistered);
+            return Err(PromiscopeError::AlreadyRegistered);
         }
 
         if vitals.age == 0 || vitals.age < MIN_PLAYER_AGE {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
         let canon_position = canonicalize_position(&env, &vitals.position)?;
         let canon_region = canonicalize_region(&env, &vitals.region)?;
         let canon_nationality = canonicalize_nationality(&env, &vitals.nationality)?;
 
         if vitals.age > MAX_PLAYER_AGE {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
         if ipfs_hashes.is_empty() || ipfs_hashes.len() > MAX_IPFS_HASHES {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         let stored = StoredPlayerProfile {
@@ -937,13 +937,13 @@ impl RegistrationContract {
         scout_id: u64,
         registered_at: u64,
         verified: bool,
-    ) -> Result<u64, ScoutChainError> {
+    ) -> Result<u64, PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         Self::require_not_paused(&env)?;
         Self::require_initialized(&env)?;
 
         if env.storage().persistent().has(&DataKey::Scout(scout_id)) {
-            return Err(ScoutChainError::AlreadyRegistered);
+            return Err(PromiscopeError::AlreadyRegistered);
         }
 
         let canon_region = canonicalize_region(&env, &region)?;
@@ -1031,27 +1031,27 @@ impl RegistrationContract {
         registered_at: u64,
         updated_at: u64,
         authorization: MigrationAuthorization,
-    ) -> Result<u64, ScoutChainError> {
+    ) -> Result<u64, PromiscopeError> {
         Self::require_not_paused(&env)?;
         Self::require_initialized(&env)?;
 
         if authorization.role != MigrationRole::Player {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         if authorization.wallet != wallet {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         if authorization.expires_at > 0 && authorization.expires_at <= env.ledger().timestamp() {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         if env.storage().persistent().has(&DataKey::MigrationNonce(
             wallet.clone(),
             authorization.nonce,
         )) {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         // Canonicalize vitals before hashing and storing
@@ -1076,7 +1076,7 @@ impl RegistrationContract {
             updated_at,
         );
         if authorization.profile_data_hash != profile_data_hash {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         let message = Self::migration_message(&env, &authorization);
@@ -1111,7 +1111,7 @@ impl RegistrationContract {
         result
     }
 
-    /// Redeem a scout migration authorization signed by the scout off-chain.
+    /// Redeem a migration authorization signed by the scout outside the ledger.
     ///
     /// A relayer with no scout private key can call this function to recreate
     /// a scout's profile on a freshly deployed contract. The function verifies
@@ -1128,27 +1128,27 @@ impl RegistrationContract {
         registered_at: u64,
         verified: bool,
         authorization: MigrationAuthorization,
-    ) -> Result<u64, ScoutChainError> {
+    ) -> Result<u64, PromiscopeError> {
         Self::require_not_paused(&env)?;
         Self::require_initialized(&env)?;
 
         if authorization.role != MigrationRole::Scout {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         if authorization.wallet != wallet {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         if authorization.expires_at > 0 && authorization.expires_at <= env.ledger().timestamp() {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         if env.storage().persistent().has(&DataKey::MigrationNonce(
             wallet.clone(),
             authorization.nonce,
         )) {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         // Canonicalize region before hashing and storing
@@ -1156,7 +1156,7 @@ impl RegistrationContract {
 
         let region_hash = Self::region_hash(&env, &canon_region);
         if authorization.profile_data_hash != region_hash {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         let message = Self::migration_message(&env, &authorization);
@@ -1277,7 +1277,7 @@ impl RegistrationContract {
     // Queries
     // -------------------------------------------------------------------------
 
-    pub fn get_player(env: Env, player_id: u64) -> Result<PlayerProfile, ScoutChainError> {
+    pub fn get_player(env: Env, player_id: u64) -> Result<PlayerProfile, PromiscopeError> {
         Self::load_player(&env, player_id)
     }
 
@@ -1302,13 +1302,13 @@ impl RegistrationContract {
     ///
     /// Admin-only. Returns `PlayerRecordEvicted` if the entry has already been
     /// fully evicted (key absent) and is no longer recoverable.
-    pub fn restore_player_record(env: Env, player_id: u64) -> Result<(), ScoutChainError> {
+    pub fn restore_player_record(env: Env, player_id: u64) -> Result<(), PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         let _profile: PlayerProfile = env
             .storage()
             .persistent()
             .get(&DataKey::Player(player_id))
-            .ok_or(ScoutChainError::PlayerRecordEvicted)?;
+            .ok_or(PromiscopeError::PlayerRecordEvicted)?;
         env.storage().persistent().extend_ttl(
             &DataKey::Player(player_id),
             PERSISTENT_TTL_MIN,
@@ -1324,13 +1324,13 @@ impl RegistrationContract {
     /// See `restore_player_record` for the protocol-23 archival-recovery
     /// semantics. Admin-only. Returns `ScoutRecordEvicted` if the entry has
     /// already been fully evicted (key absent) and is unrecoverable.
-    pub fn restore_scout_record(env: Env, scout_id: u64) -> Result<(), ScoutChainError> {
+    pub fn restore_scout_record(env: Env, scout_id: u64) -> Result<(), PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         let _profile: ScoutProfile = env
             .storage()
             .persistent()
             .get(&DataKey::Scout(scout_id))
-            .ok_or(ScoutChainError::ScoutRecordEvicted)?;
+            .ok_or(PromiscopeError::ScoutRecordEvicted)?;
         env.storage().persistent().extend_ttl(
             &DataKey::Scout(scout_id),
             PERSISTENT_TTL_MIN,
@@ -1341,16 +1341,16 @@ impl RegistrationContract {
     }
 
     /// Return a lightweight player summary without IPFS hashes or wallet.
-    pub fn get_player_summary(env: Env, player_id: u64) -> Result<PlayerSummary, ScoutChainError> {
+    pub fn get_player_summary(env: Env, player_id: u64) -> Result<PlayerSummary, PromiscopeError> {
         let profile = Self::load_player(&env, player_id)?;
         Ok(Self::to_player_summary(&profile))
     }
 
     /// Batch-fetch player summaries for up to 20 IDs in a single call.
     /// Missing IDs are skipped (partial hits).
-    pub fn get_players(env: Env, ids: Vec<u64>) -> Result<Vec<PlayerSummary>, ScoutChainError> {
+    pub fn get_players(env: Env, ids: Vec<u64>) -> Result<Vec<PlayerSummary>, PromiscopeError> {
         if ids.len() > MAX_BATCH_SIZE {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         let mut summaries = Vec::new(&env);
@@ -1367,12 +1367,12 @@ impl RegistrationContract {
     pub fn get_player_by_wallet(
         env: Env,
         wallet: Address,
-    ) -> Result<PlayerProfile, ScoutChainError> {
+    ) -> Result<PlayerProfile, PromiscopeError> {
         let player_id: u64 = env
             .storage()
             .persistent()
             .get(&DataKey::PlayerByWallet(wallet))
-            .ok_or(ScoutChainError::PlayerNotFound)?;
+            .ok_or(PromiscopeError::PlayerNotFound)?;
         Self::load_player(&env, player_id)
     }
 
@@ -1381,14 +1381,14 @@ impl RegistrationContract {
     /// progress contract for `level`). Used by the scout_access contract to
     /// verify player ownership of an `EvidenceAccessGrant` without paying the
     /// full-profile resolution cost.
-    pub fn get_player_id_by_wallet(env: Env, wallet: Address) -> Result<u64, ScoutChainError> {
+    pub fn get_player_id_by_wallet(env: Env, wallet: Address) -> Result<u64, PromiscopeError> {
         env.storage()
             .persistent()
             .get(&DataKey::PlayerByWallet(wallet))
-            .ok_or(ScoutChainError::PlayerNotFound)
+            .ok_or(PromiscopeError::PlayerNotFound)
     }
 
-    pub fn get_player_status(env: Env, player_id: u64) -> Result<PlayerStatus, ScoutChainError> {
+    pub fn get_player_status(env: Env, player_id: u64) -> Result<PlayerStatus, PromiscopeError> {
         Self::load_stored_player(&env, player_id)?;
         if env
             .storage()
@@ -1439,12 +1439,12 @@ impl RegistrationContract {
             .unwrap_or(false)
     }
 
-    pub fn get_scout(env: Env, scout_id: u64) -> Result<ScoutProfile, ScoutChainError> {
+    pub fn get_scout(env: Env, scout_id: u64) -> Result<ScoutProfile, PromiscopeError> {
         let profile: ScoutProfile = env
             .storage()
             .persistent()
             .get(&DataKey::Scout(scout_id))
-            .ok_or(ScoutChainError::ScoutNotFound)?;
+            .ok_or(PromiscopeError::ScoutNotFound)?;
         env.storage().persistent().extend_ttl(
             &DataKey::Scout(scout_id),
             PERSISTENT_TTL_MIN,
@@ -1454,12 +1454,12 @@ impl RegistrationContract {
     }
 
     /// Get a scout profile by wallet address. Used by scout_access contract for Pro-tier verification gating.
-    pub fn get_scout_by_wallet(env: Env, wallet: Address) -> Result<ScoutProfile, ScoutChainError> {
+    pub fn get_scout_by_wallet(env: Env, wallet: Address) -> Result<ScoutProfile, PromiscopeError> {
         let scout_id: u64 = env
             .storage()
             .persistent()
             .get(&DataKey::ScoutByWallet(wallet.clone()))
-            .ok_or(ScoutChainError::ScoutNotFound)?;
+            .ok_or(PromiscopeError::ScoutNotFound)?;
         Self::get_scout(env, scout_id)
     }
 
@@ -1470,9 +1470,9 @@ impl RegistrationContract {
     ///
     /// Capped at `MAX_BATCH_SIZE` (20) to bound gas usage per call.
     /// Pass more than 20 IDs → `InvalidInput`.
-    pub fn get_scouts(env: Env, ids: Vec<u64>) -> Result<Vec<ScoutProfile>, ScoutChainError> {
+    pub fn get_scouts(env: Env, ids: Vec<u64>) -> Result<Vec<ScoutProfile>, PromiscopeError> {
         if ids.len() > MAX_BATCH_SIZE {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
 
         let mut profiles = Vec::new(&env);
@@ -1499,13 +1499,13 @@ impl RegistrationContract {
     ///
     /// Calling this on an already-verified scout is a no-op — `verified_at` is
     /// not overwritten once set, preventing accidental timestamp resets.
-    pub fn verify_scout(env: Env, scout_id: u64) -> Result<(), ScoutChainError> {
+    pub fn verify_scout(env: Env, scout_id: u64) -> Result<(), PromiscopeError> {
         let admin = require_admin(&env, &DataKey::Admin, ADMIN_BUMP_LEDGERS)?;
         let mut profile: ScoutProfile = env
             .storage()
             .persistent()
             .get(&DataKey::Scout(scout_id))
-            .ok_or(ScoutChainError::ScoutNotFound)?;
+            .ok_or(PromiscopeError::ScoutNotFound)?;
 
         // Idempotent: skip re-verification to avoid overwriting verified_at.
         if profile.verified {
@@ -1542,12 +1542,12 @@ impl RegistrationContract {
     pub fn get_scout_verification(
         env: Env,
         scout_id: u64,
-    ) -> Result<ScoutVerificationRecord, ScoutChainError> {
+    ) -> Result<ScoutVerificationRecord, PromiscopeError> {
         let profile: ScoutProfile = env
             .storage()
             .persistent()
             .get(&DataKey::Scout(scout_id))
-            .ok_or(ScoutChainError::ScoutNotFound)?;
+            .ok_or(PromiscopeError::ScoutNotFound)?;
         Ok(profile.verification)
     }
 
@@ -1638,11 +1638,11 @@ impl RegistrationContract {
         min_level: ProgressLevel,
         offset: u32,
         limit: u32,
-    ) -> Result<FilterResult, ScoutChainError> {
+    ) -> Result<FilterResult, PromiscopeError> {
         Self::require_initialized(&env)?;
 
         if limit == 0 {
-            return Err(ScoutChainError::InvalidInput);
+            return Err(PromiscopeError::InvalidInput);
         }
         // Normalize filter inputs to match canonical stored values
         let canon_region = normalize_filter_region(&env, &region)?;
@@ -1765,26 +1765,26 @@ impl RegistrationContract {
     // Internal helpers
     // -------------------------------------------------------------------------
 
-    fn require_initialized(env: &Env) -> Result<(), ScoutChainError> {
+    fn require_initialized(env: &Env) -> Result<(), PromiscopeError> {
         if !env
             .storage()
             .instance()
             .get::<DataKey, bool>(&DataKey::Initialized)
             .unwrap_or(false)
         {
-            return Err(ScoutChainError::NotInitialized);
+            return Err(PromiscopeError::NotInitialized);
         }
         Ok(())
     }
 
-    fn require_not_paused(env: &Env) -> Result<(), ScoutChainError> {
+    fn require_not_paused(env: &Env) -> Result<(), PromiscopeError> {
         if env
             .storage()
             .instance()
             .get::<DataKey, bool>(&DataKey::Paused)
             .unwrap_or(false)
         {
-            return Err(ScoutChainError::ContractPaused);
+            return Err(PromiscopeError::ContractPaused);
         }
         Ok(())
     }
@@ -1795,7 +1795,7 @@ impl RegistrationContract {
     /// timestamp is present and the current ledger time is before
     /// `last_sent + cooldown_secs`, returns `RegistrationCooldown`.
     /// A cooldown of 0 disables the check entirely.
-    fn enforce_reg_cooldown(env: &Env, last_sent_key: &DataKey) -> Result<(), ScoutChainError> {
+    fn enforce_reg_cooldown(env: &Env, last_sent_key: &DataKey) -> Result<(), PromiscopeError> {
         let cooldown_secs: u64 = env
             .storage()
             .instance()
@@ -1813,9 +1813,9 @@ impl RegistrationContract {
             .get::<DataKey, u64>(last_sent_key)
         {
             let next_allowed =
-                safe_add_u64(last_sent, cooldown_secs).map_err(|_| ScoutChainError::Overflow)?;
+                safe_add_u64(last_sent, cooldown_secs).map_err(|_| PromiscopeError::Overflow)?;
             if now < next_allowed {
-                return Err(ScoutChainError::RegistrationCooldown);
+                return Err(PromiscopeError::RegistrationCooldown);
             }
         }
         Ok(())
@@ -1824,12 +1824,12 @@ impl RegistrationContract {
     fn load_stored_player(
         env: &Env,
         player_id: u64,
-    ) -> Result<StoredPlayerProfile, ScoutChainError> {
+    ) -> Result<StoredPlayerProfile, PromiscopeError> {
         let profile = env
             .storage()
             .persistent()
             .get(&DataKey::Player(player_id))
-            .ok_or(ScoutChainError::PlayerNotFound)?;
+            .ok_or(PromiscopeError::PlayerNotFound)?;
         env.storage().persistent().extend_ttl(
             &DataKey::Player(player_id),
             PERSISTENT_TTL_MIN,
@@ -1874,7 +1874,7 @@ impl RegistrationContract {
         }
     }
 
-    fn load_player(env: &Env, player_id: u64) -> Result<PlayerProfile, ScoutChainError> {
+    fn load_player(env: &Env, player_id: u64) -> Result<PlayerProfile, PromiscopeError> {
         let stored = Self::load_stored_player(env, player_id)?;
         let level = Self::resolve_level(env, player_id);
         Ok(Self::stored_to_profile(stored, level))
@@ -1889,48 +1889,48 @@ impl RegistrationContract {
         }
     }
 
-    fn next_player_id(env: &Env) -> Result<u64, ScoutChainError> {
+    fn next_player_id(env: &Env) -> Result<u64, PromiscopeError> {
         let id: u64 = env
             .storage()
             .instance()
             .get(&DataKey::PlayerCounter)
             .unwrap_or(0u64);
-        let next = safe_add_u64(id, 1).map_err(|_| ScoutChainError::Overflow)?;
+        let next = safe_add_u64(id, 1).map_err(|_| PromiscopeError::Overflow)?;
         env.storage().instance().set(&DataKey::PlayerCounter, &next);
         Ok(next)
     }
 
-    fn next_scout_id(env: &Env) -> Result<u64, ScoutChainError> {
+    fn next_scout_id(env: &Env) -> Result<u64, PromiscopeError> {
         let id: u64 = env
             .storage()
             .instance()
             .get(&DataKey::ScoutCounter)
             .unwrap_or(0u64);
-        let next = safe_add_u64(id, 1).map_err(|_| ScoutChainError::Overflow)?;
+        let next = safe_add_u64(id, 1).map_err(|_| PromiscopeError::Overflow)?;
         env.storage().instance().set(&DataKey::ScoutCounter, &next);
         Ok(next)
     }
 
     /// Increment the O(1) live player counter (checked to prevent overflow).
-    fn increment_live_player_count(env: &Env) -> Result<(), ScoutChainError> {
+    fn increment_live_player_count(env: &Env) -> Result<(), PromiscopeError> {
         let count: u64 = env
             .storage()
             .instance()
             .get(&DataKey::LivePlayerCount)
             .unwrap_or(0u64);
-        let next = count.checked_add(1).ok_or(ScoutChainError::Overflow)?;
+        let next = count.checked_add(1).ok_or(PromiscopeError::Overflow)?;
         env.storage().instance().set(&DataKey::LivePlayerCount, &next);
         Ok(())
     }
 
     /// Increment the O(1) live scout counter (checked to prevent overflow).
-    fn increment_live_scout_count(env: &Env) -> Result<(), ScoutChainError> {
+    fn increment_live_scout_count(env: &Env) -> Result<(), PromiscopeError> {
         let count: u64 = env
             .storage()
             .instance()
             .get(&DataKey::LiveScoutCount)
             .unwrap_or(0u64);
-        let next = count.checked_add(1).ok_or(ScoutChainError::Overflow)?;
+        let next = count.checked_add(1).ok_or(PromiscopeError::Overflow)?;
         env.storage().instance().set(&DataKey::LiveScoutCount, &next);
         Ok(())
     }
@@ -2346,7 +2346,7 @@ mod tests {
         let result = client.try_register_player(&wallet, &vitals, &hashes);
         assert_eq!(
             result,
-            Err(Ok(ScoutChainError::InvalidInput)),
+            Err(Ok(PromiscopeError::InvalidInput)),
             "expected InvalidInput when position exceeds 64 bytes"
         );
     }
@@ -2374,7 +2374,7 @@ mod tests {
     // Issue #460: MIN_PLAYER_AGE validation
     // -------------------------------------------------------------------------
 
-    /// age = 0 must return ScoutChainError::InvalidInput
+    /// age = 0 must return PromiscopeError::InvalidInput
     #[test]
     fn test_register_player_age_zero_returns_invalid_input() {
         let (env, client) = setup();
@@ -2390,10 +2390,10 @@ mod tests {
         };
         let hashes = vec![&env, String::from_str(&env, "QmTest")];
         let result = client.try_register_player(&wallet, &vitals, &hashes);
-        assert_eq!(result, Err(Ok(ScoutChainError::InvalidInput)));
+        assert_eq!(result, Err(Ok(PromiscopeError::InvalidInput)));
     }
 
-    /// age below MIN_PLAYER_AGE must return ScoutChainError::InvalidInput
+    /// age below MIN_PLAYER_AGE must return PromiscopeError::InvalidInput
     #[test]
     fn test_register_player_age_below_min_returns_invalid_input() {
         let (env, client) = setup();
@@ -2409,7 +2409,7 @@ mod tests {
         };
         let hashes = vec![&env, String::from_str(&env, "QmTest")];
         let result = client.try_register_player(&wallet, &vitals, &hashes);
-        assert_eq!(result, Err(Ok(ScoutChainError::InvalidInput)));
+        assert_eq!(result, Err(Ok(PromiscopeError::InvalidInput)));
     }
 
     /// age = MIN_PLAYER_AGE must register successfully
@@ -2511,7 +2511,7 @@ mod tests {
         let hashes = vec![&env, String::from_str(&env, "QmTest")];
 
         let result = client.try_register_player(&wallet, &vitals, &hashes);
-        assert_eq!(result, Err(Ok(ScoutChainError::InvalidInput)));
+        assert_eq!(result, Err(Ok(PromiscopeError::InvalidInput)));
     }
 
     /// An exactly 100-byte region string is at the boundary and must succeed.
@@ -2628,7 +2628,7 @@ mod tests {
         ];
 
         let result = client.try_register_player(&wallet, &vitals, &hashes);
-        assert_eq!(result, Err(Ok(ScoutChainError::InvalidInput)));
+        assert_eq!(result, Err(Ok(PromiscopeError::InvalidInput)));
     }
 
     #[test]
@@ -2701,7 +2701,7 @@ mod tests {
             h.clone(),
         ];
         let rejected = client.try_update_profile(&player_id, &too_many);
-        assert_eq!(rejected, Err(Ok(ScoutChainError::InvalidInput)));
+        assert_eq!(rejected, Err(Ok(PromiscopeError::InvalidInput)));
 
         let profile_after_rejection = client.get_player(&player_id);
         assert_eq!(profile_after_rejection.ipfs_hashes.len(), 1);
@@ -3758,7 +3758,7 @@ mod tests {
         let hashes = vec![&env, String::from_str(&env, "QmTest")];
 
         let result = client.try_register_player(&wallet, &vitals, &hashes);
-        assert_eq!(result, Err(Ok(ScoutChainError::ContractPaused)));
+        assert_eq!(result, Err(Ok(PromiscopeError::ContractPaused)));
     }
 
     #[test]
@@ -3772,7 +3772,7 @@ mod tests {
         let region = String::from_str(&env, "Europe");
 
         let result = client.try_register_scout(&wallet, &region);
-        assert_eq!(result, Err(Ok(ScoutChainError::ContractPaused)));
+        assert_eq!(result, Err(Ok(PromiscopeError::ContractPaused)));
     }
 
     #[test]
@@ -3791,7 +3791,7 @@ mod tests {
 
         let new_hashes = vec![&env, String::from_str(&env, "QmNew")];
         let result = client.try_update_profile(&player_id, &new_hashes);
-        assert_eq!(result, Err(Ok(ScoutChainError::ContractPaused)));
+        assert_eq!(result, Err(Ok(PromiscopeError::ContractPaused)));
     }
 
     #[test]
@@ -3994,7 +3994,7 @@ mod tests {
         let hashes = vec![&env, String::from_str(&env, "QmTest")];
         assert_eq!(
             client.try_register_player(&wallet, &vitals, &hashes),
-            Err(Ok(ScoutChainError::ContractPaused))
+            Err(Ok(PromiscopeError::ContractPaused))
         );
 
         client.unpause_contract();
@@ -4063,8 +4063,8 @@ mod tests {
 
     #[test]
     fn test_full_milestone_approval_flow_integration() {
-        use scoutchain_progress::{ProgressContract, ProgressContractClient};
-        use scoutchain_verification::{VerificationContract, VerificationContractClient};
+        use promiscope_progress::{ProgressContract, ProgressContractClient};
+        use promiscope_verification::{VerificationContract, VerificationContractClient};
         use soroban_sdk::testutils::Ledger;
 
         let env = Env::default();
@@ -4283,13 +4283,13 @@ mod tests {
     // Issue #1455: Round-trip type compatibility guard
     //
     // These tests guard against silent ABI drift between the types defined in
-    // scoutchain-shared-types and any consumer that mirrors them. If a field is
+    // promiscope-shared-types and any consumer that mirrors them. If a field is
     // renamed or reordered in shared-types the tests below will fail to compile,
     // making the breakage visible at build time rather than at runtime.
     // -------------------------------------------------------------------------
 
     /// Compile-time guard: PlayerVitals and PlayerProfile fields from
-    /// scoutchain-shared-types must remain layout-compatible with what
+    /// promiscope-shared-types must remain layout-compatible with what
     /// registration stores and returns. This test constructs both types
     /// directly, asserting field names and types haven't drifted.
     #[test]
@@ -4343,7 +4343,7 @@ mod tests {
         assert_eq!(profile.level, ProgressLevel::Unverified);
     }
 
-    /// Compile-time guard: ScoutProfile from scoutchain-shared-types must
+    /// Compile-time guard: ScoutProfile from promiscope-shared-types must
     /// remain layout-compatible with what registration stores and returns.
     #[test]
     fn test_scout_profile_round_trip_type_compatibility() {
@@ -4451,7 +4451,7 @@ mod tests {
         let hashes = vec![&env, String::from_str(&env, "QmAgeTest")];
 
         let result = client.try_register_player(&wallet, &vitals, &hashes);
-        assert_eq!(result, Err(Ok(ScoutChainError::InvalidInput)));
+        assert_eq!(result, Err(Ok(PromiscopeError::InvalidInput)));
     }
 
     /// An implausibly large age (999) must also be rejected with InvalidInput.
@@ -4471,7 +4471,7 @@ mod tests {
         let hashes = vec![&env, String::from_str(&env, "QmAgeTest")];
 
         let result = client.try_register_player(&wallet, &vitals, &hashes);
-        assert_eq!(result, Err(Ok(ScoutChainError::InvalidInput)));
+        assert_eq!(result, Err(Ok(PromiscopeError::InvalidInput)));
     }
 
     // -------------------------------------------------------------------------
@@ -4498,7 +4498,7 @@ mod tests {
         let hashes = vec![&env, String::from_str(&env, "QmTest")];
         assert_eq!(
             client.try_register_player(&wallet1, &vitals_bad_pos, &hashes),
-            Err(Ok(ScoutChainError::InvalidInput))
+            Err(Ok(PromiscopeError::InvalidInput))
         );
 
         // 2. Confirm register_player rejects oversized region (> 100 bytes)
@@ -4511,7 +4511,7 @@ mod tests {
         };
         assert_eq!(
             client.try_register_player(&wallet2, &vitals_bad_reg, &hashes),
-            Err(Ok(ScoutChainError::InvalidInput))
+            Err(Ok(PromiscopeError::InvalidInput))
         );
 
         // 3. Confirm register_player rejects oversized nationality (> 64 bytes)
@@ -4524,7 +4524,7 @@ mod tests {
         };
         assert_eq!(
             client.try_register_player(&wallet3, &vitals_bad_nat, &hashes),
-            Err(Ok(ScoutChainError::InvalidInput))
+            Err(Ok(PromiscopeError::InvalidInput))
         );
 
         // 4. Confirm register_player succeeds with exact upper boundary lengths
@@ -4660,7 +4660,7 @@ mod tests {
     /// level_gte agrees with rank()-based ordering.
     #[test]
     fn test_level_gte_all_pairs() {
-        use scoutchain_shared_types::ProgressLevel;
+        use promiscope_shared_types::ProgressLevel;
 
         let all_levels = [
             ProgressLevel::Unverified,

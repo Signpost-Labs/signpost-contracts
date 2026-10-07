@@ -15,7 +15,7 @@
 //! 5. `approve_milestone`'s single-signature fast path is closed once threshold > 1
 //! 6. CPU-instruction cost of the threshold-reaching call does not scale with vote count
 
-use scoutchain_verification::{
+use promiscope_verification::{
     AttestationStatus, RevocationSeverity, VerificationContract, VerificationContractClient,
     VerificationError,
 };

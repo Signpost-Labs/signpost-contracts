@@ -6,10 +6,10 @@ mod events;
 mod types;
 
 use errors::ProgressError;
-use scoutchain_shared_types::{require_admin, ContractHealth, MigrationStatus, ProgressLevel};
+use promiscope_shared_types::{require_admin, ContractHealth, MigrationStatus, ProgressLevel};
 use types::{DataKey, ProgressEntry, CODE_SCHEMA_VERSION};
 pub use errors::ProgressError;
-use scoutchain_shared_types::{
+use promiscope_shared_types::{
     read_wiring_link, require_admin, safe_math::safe_add_u32, write_wiring_link, ContractHealth,
     ProgressLevel,
 };
@@ -24,7 +24,7 @@ use soroban_sdk::{contract, contractimpl, Address, Bytes, BytesN, Env, String, V
 // level sync is simply skipped.
 mod registration_contract {
     soroban_sdk::contractimport!(
-        file = "fixtures/scoutchain_registration.wasm"
+        file = "fixtures/promiscope_registration.wasm"
     );
 }
 
@@ -68,7 +68,7 @@ const HISTORY_PAGE_SIZE: u32 = 8;
 // Minimal client for the registration contract.
 // Used to sync a player's level after advance_level / reset_player_level.
 mod registration_contract {
-    use scoutchain_shared_types::ProgressLevel;
+    use promiscope_shared_types::ProgressLevel;
     use soroban_sdk::{contractclient, contracterror, Env};
 
     // Named uniquely (not `Error`) so the `stellar contract bindings
@@ -2102,8 +2102,8 @@ mod tests {
         // caps each validator at 5) for every player_id used across this test
         // suite so existing level-progression tests (unrelated to milestone
         // validation itself) keep passing.
-        let ver_id = env.register(scoutchain_verification::VerificationContract, ());
-        let ver_client = scoutchain_verification::VerificationContractClient::new(&env, &ver_id);
+        let ver_id = env.register(promiscope_verification::VerificationContract, ());
+        let ver_client = promiscope_verification::VerificationContractClient::new(&env, &ver_id);
         let ver_admin = Address::generate(&env);
         ver_client.initialize(&ver_admin);
         let mut cid_seed: u32 = 0;
@@ -2693,8 +2693,8 @@ mod tests {
 
         // Wire a real verification contract with one approved milestone so
         // advance_level's on-chain milestone_ref validation (#457) succeeds.
-        let ver_id = env.register(scoutchain_verification::VerificationContract, ());
-        let ver_client = scoutchain_verification::VerificationContractClient::new(&env, &ver_id);
+        let ver_id = env.register(promiscope_verification::VerificationContract, ());
+        let ver_client = promiscope_verification::VerificationContractClient::new(&env, &ver_id);
         let ver_admin = Address::generate(&env);
         ver_client.initialize(&ver_admin);
         let milestone_validator = Address::generate(&env);
@@ -2948,8 +2948,8 @@ mod tests {
     // call, so validating its milestone_ref is both meaningful and safe.
     #[test]
     fn test_advance_level_invalid_milestone_ref_rejected_for_secondary_caller() {
-        use scoutchain_verification::VerificationContract;
-        use scoutchain_verification::VerificationContractClient;
+        use promiscope_verification::VerificationContract;
+        use promiscope_verification::VerificationContractClient;
 
         let env = Env::default();
         env.mock_all_auths();

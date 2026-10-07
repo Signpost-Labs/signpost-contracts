@@ -17,7 +17,7 @@
 //! `get_validator_milestones_page_v2` and `get_validator_players_page` in
 //! `contracts/verification/tests/pagination_correctness.rs`.
 
-use scoutchain_scout_access::{
+use promiscope_scout_access::{
     FeeConfig, ScoutAccessContract, ScoutAccessContractClient, SubscriptionTier,
 };
 use soroban_sdk::{

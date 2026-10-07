@@ -1,17 +1,17 @@
 #!/usr/bin/env node
-// ScoutChain — on-chain/off-chain reconciliation tool.
+// Promiscope — on-chain/off-chain reconciliation tool.
 //
 // Compares live contract state (via `stellar contract invoke`) against the
 // Postgres tables defined by migrations/001_initial_schema.sql, and reports
 // any drift between the indexer's copy and on-chain truth.
 //
 // This script is standalone: the Postgres database it talks to belongs to
-// the separate scoutchain-backend repo, not this one (see ai.md). It takes
+// the separate promiscope-backend repo, not this one (see ai.md). It takes
 // its target database and network purely via parameters/env vars — it does
 // not assume any particular deployment.
 //
 // Usage:
-//   DATABASE_URL=postgres://user:pass@host:5432/scoutchain \
+//   DATABASE_URL=postgres://user:pass@host:5432/promiscope \
 //   REGISTRATION_CONTRACT_ID=C... VERIFICATION_CONTRACT_ID=C... \
 //   PROGRESS_CONTRACT_ID=C... SCOUT_ACCESS_CONTRACT_ID=C... \
 //     node scripts/reconcile-indexer.js --network testnet [options]
@@ -776,7 +776,7 @@ async function main() {
 
 function printTextReport(report, tablesToRun) {
   console.log("=".repeat(72));
-  console.log("  ScoutChain indexer reconciliation report");
+  console.log("  Promiscope indexer reconciliation report");
   console.log("=".repeat(72));
 
   if (report.mismatches.length === 0) {

@@ -1,6 +1,6 @@
 # Event Audit Reference
 
-This document lists every on-chain event emitted by the four ScoutChain
+This document lists every on-chain event emitted by the four Promiscope
 contracts, their topic/data schemas, and their indexing obligations. Keep this
 file in sync with each contract's `events.rs`.
 
@@ -11,7 +11,7 @@ file in sync with each contract's `events.rs`.
 Each `env.events().publish((topics...), data)` call writes a record to the
 transaction's event stream. The Horizon API and Soroban RPC expose these as
 `LedgerEntryChange` events under `transaction.result_meta`. Off-chain indexers
-(the backend event-stream processor in `scoutchain-backend`) consume these to
+(the backend event-stream processor in `promiscope-backend`) consume these to
 keep the Postgres tables in `migrations/001_initial_schema.sql` in sync with
 on-chain truth.
 

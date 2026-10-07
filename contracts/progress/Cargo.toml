@@ -1,5 +1,5 @@
 [package]
-name = "scoutchain-progress"
+name = "promiscope-progress"
 version.workspace = true
 edition.workspace = true
 
@@ -8,9 +8,9 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 soroban-sdk = { workspace = true }
-scoutchain-shared-types = { path = "../shared-types" }
+promiscope-shared-types = { path = "../shared-types" }
 
 [dev-dependencies]
 soroban-sdk = { workspace = true, features = ["testutils"] }
-scoutchain-verification = { path = "../verification" }
-scoutchain-registration = { path = "../registration" }
+promiscope-verification = { path = "../verification" }
+promiscope-registration = { path = "../registration" }

@@ -7,7 +7,7 @@
 //! Without these extensions the keys receive the network's default minimal TTL
 //! and risk archival while the milestones they index are still active.
 
-use scoutchain_verification::{
+use promiscope_verification::{
     DataKey, VerificationContract, VerificationContractClient,
 };
 use soroban_sdk::{testutils::Address as _, Address, Env, String, Vec};
