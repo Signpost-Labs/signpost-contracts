@@ -1,34 +1,28 @@
 # Promiscope Soroban Contracts
 
-This repository is the Rust/Soroban contract workspace associated with Promiscope, a community project accountability platform. The contract suite is being migrated to that purpose. Its current data models and workflows still support the previous product and do not yet represent projects, evidence submissions, or community reviews. Treat deployed and stored state as legacy until a migration plan is published.
+Promiscope is a community project accountability platform concept. This repository contains its Rust/Soroban contract workspace, though the current contract models still implement the prior product domain. Project records, evidence submissions, and community review are not represented yet.
 
-## Workspace layout
+## Architecture and tree
 
-- `contracts/registration/`, `contracts/verification/`, `contracts/progress/`, and `contracts/scout_access/` — contract crates and their Rust tests.
-- `contracts/shared-types/` — shared contract types.
-- `contracts/chaos-tests/` — cross-contract and adversarial test scenarios.
-- `bindings/` — TypeScript bindings and usage examples.
-- `migrations/` — schema and state migration notes.
-- `scripts/` — build, deployment, validation, and maintenance utilities.
+The Cargo workspace builds six crates: `shared-types` contains shared definitions; `registration`, `verification`, `progress`, and `scout_access` contain the current product contracts; `chaos-tests` exercises cross-contract and adversarial behavior. Contract entry points and tests live under each crate’s `src/` and `tests/` directories. `bindings/` contains TypeScript clients and examples, `migrations/` records state/schema changes, and `scripts/` plus `testnet/` hold deployment and operational tooling.
+
+Contracts use Soroban SDK 25 and communicate through addresses and published interfaces. Events and storage keys are consumed by backend/indexer services, so interface or key changes may affect deployed data and downstream clients.
+
+## Environment and network configuration
+
+Copy `.env.example` to `.env` for deployment and integration tooling. Its comments document every variable. The main groups are deployment credentials (`DEPLOYER_SECRET`, `ADMIN_SECRET`), target network (`STELLAR_NETWORK`, `HORIZON_URL`, `SOROBAN_RPC_URL`), deployed contract addresses, and backend integration (`DATABASE_URL`, `JWT_SECRET`, SEP-10 settings). Keep secret keys out of source control; use testnet accounts for development. Rust compilation itself uses the toolchain pinned in `rust-toolchain.toml` and does not require deployment secrets.
 
 ## Build and test
 
-Use the Rust version pinned in `rust-toolchain.toml`. From the repository root:
+From the repository root, run:
 
 ```sh
 cargo build --workspace
 cargo test --workspace
 cargo fmt --all -- --check
-npm install
-npm test
+npm install && npm test
 ```
 
-The Cargo commands build, test, and check formatting for the Rust workspace. `npm test` runs the Jest checks for repository tooling. Some integration tests require a local Stellar test environment; follow the relevant script or test documentation before running them.
+Cargo builds, tests, and checks Rust formatting. Jest covers repository tooling. Deployment scripts require the relevant `.env` values and are documented in [docs/](docs/) and [scripts/](scripts/). When changing storage keys, events, authorization, or interfaces, update bindings and migration notes with the implementation.
 
-## Contract changes
-
-Document storage-key, event, authorization, and cross-contract interface changes. Storage key changes can make existing ledger data unreadable without an explicit migration. Update bindings and migration documentation alongside contract interfaces. Do not describe the existing scouting workflows as Promiscope accountability features.
-
-## Contributions and security
-
-Use focused Conventional Commit messages, for example `fix(progress): preserve update history`. Pull requests should describe the contract behavior and compatibility impact, link an issue, and report the checks run. Never commit secret keys, funded wallet credentials, or production configuration. See [CONTRIBUTING.md](docs/CONTRIBUTING.md) and [SECURITY.md](SECURITY.md).
+See [SECURITY.md](SECURITY.md) and [docs/CONTRIBUTING.md](docs/CONTRIBUTING.md) before contributing.
