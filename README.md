@@ -1,4 +1,4 @@
-# Promiscope Soroban Contracts
+# Promiscope Soroban Contracts — Stellar Community Project Accountability
 
 Promiscope is a community project accountability platform concept. This repository contains its Rust/Soroban contract workspace, though the current contract models still implement the prior product domain. Project records, evidence submissions, and community review are not represented yet.
 
