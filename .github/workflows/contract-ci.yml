@@ -69,6 +69,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Storage-layout compatibility regression tests
+        run: bash scripts/tests/check-storage-layout-compat.test.sh
       - uses: dtolnay/rust-toolchain@1.97.1
         with:
           components: clippy, rustfmt
