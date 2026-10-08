@@ -17,7 +17,7 @@ Before you can generate bindings you need:
    This writes contract IDs to `.env.contracts`.
 2. **Initialized contracts** — run `./scripts/initialize.sh testnet`.
 3. **Stellar CLI** installed (exact pinned version **25.2.0** required) — see
-   [Installing the pinned stellar-cli version](../docs/CONTRIBUTING.md#installing-the-pinned-stellar-cli-version) in `docs/CONTRIBUTING.md` for detailed installation instructions.
+   [Installing the pinned stellar-cli version](../docs/CONTRIBUTING.md#installing-stellar-cli) in `docs/CONTRIBUTING.md` for detailed installation instructions.
 4. **`.env.contracts`** present and containing all four non-empty IDs:
    ```
    REGISTRATION_CONTRACT_ID=C...
@@ -206,4 +206,4 @@ bindings/*/node_modules/
 | `Cannot find module '@stellar/stellar-sdk'` | `npm install` not run after generation | `cd bindings/<name> && npm install` |
 | `dist/` missing | `npm run build` not run | `cd bindings/<name> && npm run build` |
 | Stale types after contract change | Contract redeployed but bindings not regenerated | `./scripts/generate-bindings.sh testnet` then rebuild |
-| Wrong `stellar-cli` version | Local CLI does not match the pinned version | Install the pinned version in [`docs/CONTRIBUTING.md`](../docs/CONTRIBUTING.md#installing-the-pinned-stellar-cli-version) |
+| Wrong `stellar-cli` version | Local CLI does not match the pinned version | Install the pinned version in [`docs/CONTRIBUTING.md`](../docs/CONTRIBUTING.md#installing-stellar-cli) |
