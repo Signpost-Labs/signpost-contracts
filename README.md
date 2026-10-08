@@ -1,6 +1,6 @@
-# Promiscope Soroban Contracts — Stellar Community Project Accountability
+# Promiscope Contracts — Soroban Infrastructure for Community Accountability on Stellar
 
-Promiscope is a community project accountability platform concept. This repository contains its Rust/Soroban contract workspace, though the current contract models still implement the prior product domain. Project records, evidence submissions, and community review are not represented yet.
+Promiscope helps communities track project commitments, milestones, progress, evidence, and responses. This Rust/Soroban workspace runs on Stellar, but its current contracts still support the previous product and do not represent accountability records. The proposed design for anchoring project revision hashes on Soroban is tracked in [issue #1](https://github.com/Stellar-Promiscope/promiscope-contracts/issues/1); it is not implemented yet.
 
 ## Architecture and tree
 
@@ -10,7 +10,7 @@ Contracts use Soroban SDK 25 and communicate through addresses and published int
 
 ## How the project uses Stellar
 
-Soroban contracts run on Stellar and provide the project's on-chain execution and event layer. This workspace still contains contracts for the prior product domain; it does not yet represent community project commitments, evidence, or reviews. The proposed accountability design is to publish a hash and timestamp for a project revision on Soroban, while keeping project content, personal information, and evidence files off-chain. Such an anchor would show that a particular revision existed at a given time, not that its claims are true. The design work is tracked in [issue #1](https://github.com/Stellar-Promiscope/promiscope-contracts/issues/1); it is not implemented yet.
+The proposed accountability design would publish a hash and timestamp for a project revision on Soroban while keeping project content, personal information, and evidence files off-chain. An anchor could show that a particular revision existed at a given time; it would not verify the truth of its claims. This is design work only, not a live feature.
 
 ## Environment and network configuration
 
