@@ -89,3 +89,4 @@ pnpm-lock.yaml
 # Calibration artifacts (local only)
 calibration-report.jsom
 budget-drift.json
+cpu-cost-budget-report.txt
