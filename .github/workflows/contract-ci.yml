@@ -69,6 +69,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Python for normalization tests
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Python test dependency
+        run: python3 -m pip install pytest==8.3.3
+      - name: Test region and position normalization
+        run: python3 -m pytest scripts/tests/test_migrate_region.py
       - uses: dtolnay/rust-toolchain@1.97.1
         with:
           components: clippy, rustfmt
@@ -188,7 +196,7 @@ jobs:
               | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('result',{}).get('sequence',0))" \
               2>/dev/null || echo 0)
             if [ "${LEDGER:-0}" -gt 0 ] 2>/dev/null; then
-              echo "RPC ready — ledger ${LEDGER} after ${i}s"
+              echo "RPC ready â€” ledger ${LEDGER} after ${i}s"
               break
             fi
             sleep 2
@@ -328,7 +336,7 @@ jobs:
             dir="bindings/$pkg"
             echo "Checking $dir..."
             [ -f "$dir/src/index.ts" ] \
-              || { echo "ERROR: $dir/src/index.ts not found — generation failed"; exit 1; }
+              || { echo "ERROR: $dir/src/index.ts not found â€” generation failed"; exit 1; }
             echo "  OK: src/index.ts present"
           done
 
@@ -375,7 +383,7 @@ jobs:
             # Extract ABI JSON from the WASM.
             stellar contract info interface --wasm "$wasm" --output json-formatted \
               > "$abi_file" 2>/dev/null \
-              || { echo "  WARN: ABI extraction failed for ${contract} — skipping"; continue; }
+              || { echo "  WARN: ABI extraction failed for ${contract} â€” skipping"; continue; }
 
             # Compare ABI function names against binding exports using Python.
             python3 - "$abi_file" "$index_ts" "$contract" <<'PYEOF'
@@ -400,14 +408,14 @@ jobs:
                       abi_functions.add(name)
 
           if not abi_functions:
-              print(f"  WARN: no functions found in ABI for {contract_name} — skipping coverage check")
+              print(f"  WARN: no functions found in ABI for {contract_name} â€” skipping coverage check")
               sys.exit(0)
 
           # Parse src/index.ts: collect exported method names.
           # The generated binding exports a Client class; each public method
           # declaration covers one contract function.  We scan for both:
-          #   async methodName(   — async contract invocations
-          #   methodName(         — sync / query methods
+          #   async methodName(   â€” async contract invocations
+          #   methodName(         â€” sync / query methods
           with open(index_ts_path) as f:
               ts_source = f.read()
 
@@ -447,12 +455,12 @@ jobs:
 
       - name: Run migration smoke test against local sandbox
         # Non-blocking (continue-on-error): scripts/migrate-contract-smoke-test.sh
-        # documents itself as "a MANUAL / optional command … not a mandatory CI
-        # gate". It exercises the deploy-old→seed→migrate→replay→compare path
+        # documents itself as "a MANUAL / optional command â€¦ not a mandatory CI
+        # gate". It exercises the deploy-oldâ†’seedâ†’migrateâ†’replayâ†’compare path
         # through deploy.sh / initialize.sh / migrate-contract.sh / replay-state.sh,
         # which still carry stellar-cli-drift rough edges. Run it for signal on
         # every PR, but don't fail the Bindings smoke-test job on it until that
-        # path is hardened — see the migration-tooling cleanup follow-up.
+        # path is hardened â€” see the migration-tooling cleanup follow-up.
         continue-on-error: true
         run: |
           set -euo pipefail
