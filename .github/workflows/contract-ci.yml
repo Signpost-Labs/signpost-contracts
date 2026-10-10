@@ -69,6 +69,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Set up Python for normalization tests
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Python test dependency
+        run: python3 -m pip install pytest==8.3.3
+      - name: Test region and position normalization
+        run: python3 -m pytest scripts/tests/test_migrate_region.py
       - uses: dtolnay/rust-toolchain@1.97.1
         with:
           components: clippy, rustfmt
