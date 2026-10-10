@@ -9,11 +9,11 @@ target/
 .env
 .env.contracts
 .env.contracts.json
--.env.contracts.snapshot
+.env.contracts.snapshot
 .env.local
 
 # Migration state exports (may contain player PII) -- never commit these
--migration-export/
+migration-export/
 
 # Optimized WASM outputs
 *.optimized.wasm
@@ -75,18 +75,7 @@ pnpm-lock.yaml
 # Log files
 *.log
 
-# Test snapshots
-*.snap
-*.snap.new
-**/__snapshots_/
-**/snapshots/
-
-# Temporary files
-*.tmp
-*.bak
-*.orig
-
 # Calibration artifacts (local only)
-calibration-report.jsom
+calibration-report.json
 budget-drift.json
 cpu-cost-budget-report.txt
