@@ -703,3 +703,34 @@ jobs:
           print("")
           print("All measured values are within budget.")
           PYEOF
+
+  supply-chain:
+    name: Supply-chain & License Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@1.97.1
+        with:
+          targets: wasm32v1-none
+
+      - name: Cache cargo registry
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-wasm32v1-${{ hashFiles('**/Cargo.lock') }}
+
+      - name: Install cargo-deny
+        run: |
+          set -euo pipefail
+          command -v cargo-deny >/dev/null 2>&1 || cargo install cargo-deny --locked
+
+      - name: Pin ed25519-dalek to match workspace override
+        run: cargo update -p ed25519-dalek@3.0.0 --precise 3.0.0-rc.0 || true
+
+      - name: Run cargo-deny check
+        run: cargo deny check advisories bans licenses sources
