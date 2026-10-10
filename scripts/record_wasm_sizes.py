@@ -2,6 +2,7 @@
 import json
 import sys
 import os
+import subprocess
 
 def main():
     # Get contract name from command line argument
@@ -16,7 +17,14 @@ def main():
     sizes_file = "abi/wasm-sizes.json"
 
     # Optimize WASM
-    os.system(f"stellar contract optimize --wasm {wasm_src} --wasm-out {wasm_opt}")
+    try:
+        os.remove(wasm_opt)
+    except FileNotFoundError:
+        pass
+    subprocess.run(
+        ["stellar", "contract", "optimize", "--wasm", wasm_src, "--wasm-out", wasm_opt],
+        check=True,
+    )
 
     # Get size
     size = os.path.getsize(wasm_opt)
