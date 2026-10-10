@@ -56,6 +56,7 @@ cargo fmt --all -- --check      # formatting must be clean
 bash scripts/check-docs.sh      # documentation completeness check
 bash scripts/check-event-topic-consistency.sh  # event-topic / docs consistency
 bash scripts/check-error-code-continuity.sh  # append-only error code continuity
+bash scripts/tests/check-storage-layout-compat.test.sh  # safe, breaking, and acknowledged fixtures
 bash scripts/check-cargo-doc.sh  # public-item docs coverage check
 ```
 
