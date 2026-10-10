@@ -85,8 +85,23 @@ function parseArgs(argv) {
     if (a === "--network") args.network = argv[++i];
     else if (a === "--rpc-url") args.rpcUrl = argv[++i];
     else if (a === "--source") args.source = argv[++i];
-    else if (a === "--sample") args.sample = Number(argv[++i]);
-    else if (a === "--tables") args.tables = argv[++i].split(",").map((t) => t.trim());
+    else if (a === "--sample" || a.startsWith("--sample=")) {
+      const value = a === "--sample" ? argv[++i] : a.slice("--sample=".length);
+      const sample = Number(value);
+      if (!value || !Number.isSafeInteger(sample) || sample <= 0) {
+        throw new ConfigError("--sample requires a positive safe integer");
+      }
+      args.sample = sample;
+    } else if (a === "--tables" || a.startsWith("--tables=")) {
+      const value = a === "--tables" ? argv[++i] : a.slice("--tables=".length);
+      if (!value || value.startsWith("--")) {
+        throw new ConfigError("--tables requires a non-empty comma-separated list");
+      }
+      args.tables = value.split(",").map((t) => t.trim());
+      if (args.tables.some((t) => !t || !ALL_TABLES.includes(t))) {
+        throw new ConfigError(`--tables must contain only known tables: ${ALL_TABLES.join(", ")}`);
+      }
+    }
     else if (a === "--json") args.json = true;
     else {
       process.stderr.write(`Unknown argument: ${a}\n`);

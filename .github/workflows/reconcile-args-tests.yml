@@ -1,0 +1,26 @@
+name: Reconciliation argument regressions
+on:
+  pull_request:
+    paths:
+      - scripts/reconcile-indexer.js
+      - scripts/tests/reconcile-indexer-args.test.cjs
+      - .github/workflows/reconcile-args-tests.yml
+  push:
+    branches: [main]
+    paths:
+      - scripts/reconcile-indexer.js
+      - scripts/tests/reconcile-indexer-args.test.cjs
+      - .github/workflows/reconcile-args-tests.yml
+permissions:
+  contents: read
+jobs:
+  regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Test CLI validation without database or chain access
+        run: node --test scripts/tests/reconcile-indexer-args.test.cjs
