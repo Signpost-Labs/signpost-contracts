@@ -668,6 +668,12 @@ jobs:
           set -euo pipefail
           python scripts/calibrate-budgets.py --headroom 0.20
 
+      - name: Run calibrate-budgets.py test suite
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet pytest
+          python3 -m pytest scripts/tests/test_calibrate_budgets.py -v
+
       - name: Check for drift between measured and budgeted values
         run: |
           set -euo pipefail
