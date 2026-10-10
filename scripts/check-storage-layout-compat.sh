@@ -10,6 +10,7 @@
 #
 #   <old-ref> and <new-ref> may be:
 #     - A path to a single types.rs file
+#     - A fixture directory containing old_types.rs and new_types.rs
 #     - A path to the repo root directory (contracts/ subdirectory is used)
 #     - A git ref (commit SHA, branch name, or tag)
 #
@@ -349,6 +350,15 @@ extract_git_ref() {
 copy_from_path() {
   local src="$1"
   local dest="$2"
+  local side="$3"
+  if [[ -d "$src" && ( -f "${src}/old_types.rs" || -f "${src}/new_types.rs" ) ]]; then
+    if [[ ! -f "${src}/old_types.rs" || ! -f "${src}/new_types.rs" ]]; then
+      echo "ERROR: fixture directory must contain old_types.rs and new_types.rs: $src" >&2
+      return 2
+    fi
+    # A fixture directory is a before/after pair, not a contracts/ tree.
+    src="${src}/${side}_types.rs"
+  fi
   mkdir -p "$dest"
   if [[ -f "$src" ]]; then
     # Single file — treat as the types.rs for all contracts (fixture mode)
@@ -375,13 +385,13 @@ OLD_SRC="${WORK_DIR}/old_src"
 NEW_SRC="${WORK_DIR}/new_src"
 
 if is_file_path "$OLD_REF"; then
-  copy_from_path "$OLD_REF" "$OLD_SRC"
+  copy_from_path "$OLD_REF" "$OLD_SRC" old
 else
   extract_git_ref "$OLD_REF" "$OLD_SRC"
 fi
 
 if is_file_path "$NEW_REF"; then
-  copy_from_path "$NEW_REF" "$NEW_SRC"
+  copy_from_path "$NEW_REF" "$NEW_SRC" new
 else
   extract_git_ref "$NEW_REF" "$NEW_SRC"
 fi
