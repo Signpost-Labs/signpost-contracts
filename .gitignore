@@ -6,11 +6,9 @@ target/
 # produces a reproducible WASM binary hash for release verification.
 
 # Environment secrets -- never commit these
-.env
 .env.contracts
 .env.contracts.json
 .env.contracts.snapshot
-.env.local
 
 # Migration state exports (may contain player PII) -- never commit these
 migration-export/
@@ -24,7 +22,6 @@ migration-export/
 Thumbs.db
 
 # Editor
-.vscode/
 .idea/
 *.swp
 *.swo
@@ -82,3 +79,4 @@ cpu-cost-budget-report.txt
 branch_structure.json
 temp_auto_push.bat
 temp_interactive_push.bat
+config.bat
