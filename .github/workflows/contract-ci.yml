@@ -14,6 +14,7 @@ jobs:
   test:
     name: Build & Test
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
     - uses: actions/checkout@v4
     - name: Install Rust toolchain
@@ -51,6 +52,7 @@ jobs:
   lint:
     name: Lint
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python for normalization tests
@@ -141,6 +143,7 @@ jobs:
   bindings-smoke-test:
     name: Bindings smoke-test (local sandbox)
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     needs: test
     env:
       STELLAR_SOURCE_ACCOUNT: ci-deployer
@@ -345,6 +348,7 @@ jobs:
   abi-export:
     name: Export Contract ABIs
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     needs: test
     steps:
     - uses: actions/checkout@v4
@@ -426,6 +430,7 @@ jobs:
   abi-diff:
     name: ABI Diff Gate
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs: abi-export
     steps:
     - uses: actions/checkout@v4
@@ -452,6 +457,7 @@ jobs:
   budget-calibration:
     name: Budget Calibration
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     needs:
     - test
     - abi-export
@@ -502,6 +508,7 @@ jobs:
   supply-chain:
     name: Supply-chain & License Audit
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
     - uses: actions/checkout@v4
     - name: Install Rust toolchain
